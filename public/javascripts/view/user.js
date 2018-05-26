@@ -1,193 +1,115 @@
 var app = new Vue({
   el: '#app',
   data: {
-    administratorID: '',
+    userID: '',
     userName: '',
-    account_current: '',
-    account: '',
-    accountValid: false,
-    cellphone_current: '',
     cellphone: '',
+    originalCellphone: '',
     cellphoneValid: false,
-    email_current: '',
-    email: '',
-    emailValid: false,
-    password: '',
-    confirmPassword: '',
-    passwordValid: false
+    saveType: ''
   },
   computed: {
     enabledSave: function () {
       return this.userName.length > 0
-          && this.account.length > 0
           && this.cellphone.length > 0
-          && this.email.length > 0
-          && this.password.length > 0
-          && this.confirmPassword.length > 0
-          && this.accountValid
-          && this.cellphoneValid
-          && this.emailValid
-          && this.passwordValid;
+          && (this.cellphone === this.originalCellphone || this.cellphoneValid);
     }
   },
   methods: {
-    initProcess: function () {
-      this.setCurrentUserInfo();
-    },
-    setCurrentUserInfo: function () {
-      this.administratorID = getLoginUserInfo().administratorID;
-      $.ajax({
-        url: '/user/detail?administratorID=' + this.administratorID,
-        type: 'GET',
-        success: function(res){
-          if(res.err){
-            propAlert(res.msg);
-          }else{
-            app.$data.administratorID = res.data.administratorID;
-            app.$data.userName = res.data.administratorName;
-            app.$data.account_current = res.data.account;
-            app.$data.account = res.data.account;
-            if(res.data.account.length > 0){
-              app.$data.accountValid = true;
-            }
-            app.$data.cellphone_current = res.data.cellphone;
-            app.$data.cellphone = res.data.cellphone;
-            if(res.data.cellphone.length > 0){
-              app.$data.cellphoneValid = true;
-            }
-            app.$data.email_current = res.data.email;
-            app.$data.email = res.data.email;
-            if(res.data.email.length > 0){
-              app.$data.emailValid = true;
-            }
-          }
-        },
-        error: function(XMLHttpRequest, textStatus){
-          propAlert('远程服务无响应，状态码：' + XMLHttpRequest.status);
-        }
-      });
-    },
-    onUserNameBlur: function () {
-      if(app.$data.account === app.$data.account_current){
-        app.$data.accountValid = true;
-        hiddenMessage();
-      }
-      if(app.$data.account.length <= 0 || app.$data.account === app.$data.account_current){
-        return false;
-      }
-      $.ajax({
-        url: '/register/checkUserName?userName='+app.$data.account,
-        type: 'GET',
-        success: function(res){
-          if(res.err){
-            app.$data.accountValid = false;
-            showMessage(res.msg);
-          }else if(res.exist){
-            app.$data.accountValid = false;
-            showMessage('用户名已存在。');
-          }else{
-            app.$data.accountValid = true;
-            hiddenMessage();
-          }
-        },
-        error: function(XMLHttpRequest, textStatus){
-          showMessage('远程服务无响应，状态码：' + XMLHttpRequest.status);
-        }
-      });
-    },
     onCellphoneBlur: function () {
-      if(app.$data.cellphone === app.$data.cellphone_current){
-        app.$data.cellphoneValid = true;
-        hiddenMessage();
-      }
-      if(app.$data.cellphone.length <= 0 || app.$data.cellphone === app.$data.cellphone_current){
+      if(this.cellphone.length === 0 || this.cellphone === this.originalCellphone){
         return false;
       }
       $.ajax({
-        url: '/register/checkCellphone?cellphone='+app.$data.cellphone,
+        url: '/user/cellphone?cellphone=' + this.cellphone,
         type: 'GET',
         success: function(res){
           if(res.err){
-            app.$data.cellphoneValid = false;
-            showMessage(res.msg);
-          }else if(res.exist){
-            app.$data.cellphoneValid = false;
-            showMessage('手机号已存在。');
-          }else{
-            app.$data.cellphoneValid = true;
-            hiddenMessage();
+            layer.msg(res.msg);
+            return false;
           }
+          if(res.data !== null){
+            app.$data.cellphoneValid = false;
+            layer.msg('该手机号码已存在。');
+            return false;
+          }
+          app.$data.cellphoneValid = true;
         },
         error: function(XMLHttpRequest, textStatus){
-          showMessage('远程服务无响应，状态码：' + XMLHttpRequest.status);
+          layer.msg('远程服务无响应，请检查网络设置。');
         }
       });
     },
-    onEmailBlur: function () {
-      if(app.$data.email === app.$data.email_current){
-        app.$data.emailValid = true;
-        hiddenMessage();
-      }
-      if(app.$data.email.length <= 0 || app.$data.email === app.$data.email_current){
-        return false;
-      }
-      $.ajax({
-        url: '/register/checkEmail?email='+app.$data.email,
-        type: 'GET',
-        success: function(res){
-          if(res.err){
-            app.$data.emailValid = false;
-            showMessage(res.msg);
-          }else if(res.exist){
-            app.$data.emailValid = false;
-            showMessage('邮箱已存在。');
-          }else{
-            app.$data.emailValid = true;
-            hiddenMessage();
-          }
-        },
-        error: function(XMLHttpRequest, textStatus){
-          showMessage('远程服务无响应，状态码：' + XMLHttpRequest.status);
+    onAdd: function(){
+      this.saveType = 'add';
+      $('#myModal').modal('show');
+    },
+    onChange: function(rowIndex){
+      this.saveType = 'upd';
+      let row = $('#data-list tbody tr').eq(rowIndex);
+      this.userID = $(row).find('td').eq(0).text();
+      this.userName = $(row).find('td').eq(1).text();
+      this.cellphone = $(row).find('td').eq(2).text();
+      this.originalCellphone = $(row).find('td').eq(2).text();
+      $('#myModal').modal('show');
+    },
+    onDelete: function (userID, userName) {
+      let confirmMsg = '您确定要删除用户【' + userName + '】吗？';
+      bootbox.confirm(confirmMsg, function(result) {
+        if(result) {
+          $.ajax({
+            url: '/user?userID=' + userID,
+            type: 'delete',
+            dataType: 'json',
+            success: function(res){
+              if(res.err){
+                layer.msg(res.msg);
+              }else{
+                location.reload();
+              }
+            },
+            error: function(XMLHttpRequest){
+              layer.msg('远程服务无响应，请检查网络设置。');
+            }
+          });
         }
       });
-    },
-    onConfirmPasswordBlur: function () {
-      if(app.$data.password !== app.$data.confirmPassword){
-        app.$data.passwordValid = false;
-        showMessage('密码和确认密码不一致。');
-      }else{
-        app.$data.passwordValid = true;
-        hiddenMessage();
-      }
     },
     onSave: function () {
+      let type = '';
+      let data = {};
+      if(this.saveType === 'add'){
+        type = 'post';
+        data = {
+          userName: this.userName,
+          cellphone: this.cellphone,
+          loginUser: getLoginUser()
+        }
+      }else {
+        type = 'put';
+        data = {
+          userID: this.userID,
+          userName: this.userName,
+          cellphone: this.cellphone,
+          loginUser: getLoginUser()
+        }
+      }
       $.ajax({
         url: '/user',
-        type: 'PUT',
+        type: type,
         dataType: 'json',
-        data:{
-          administratorID: app.$data.administratorID,
-          userName: app.$data.userName,
-          account: app.$data.account,
-          cellphone: app.$data.cellphone,
-          email: app.$data.email,
-          password: app.$data.password,
-          loginUser: getLoginUser()
-        },
+        data: data,
         success: function(res){
           if(res.err){
-            showMessage(res.msg);
+            layer.msg(res.msg);
           }else{
-            showMessage('个人信息修改成功。');
+            location.reload();
           }
         },
         error: function(XMLHttpRequest, textStatus){
-          showMessage('远程服务无响应，状态码：' + XMLHttpRequest.status);
+          layer.msg('远程服务无响应，请检查网络设置。');
         }
       });
     }
-  },
-  mounted: function () {
-    this.initProcess();
   }
 });
