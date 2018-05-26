@@ -18,6 +18,10 @@
   margin-top: 15px;
   width: 200px;
 }
+.title{
+  text-align: center;
+  border-bottom: 1px solid silver;
+}
 .title input{
   width: 700px;
   height: 55px;
@@ -25,12 +29,20 @@
   text-align: center;
   color: #1a1a1a;
   border: none;
-  border-bottom: 1px solid silver;
+
 }
-.time p{
-  width: 700px;
-  margin-top: 5px;
+.time .input-group{
+  width: 235px;
+  margin: 5px auto 0;
   text-align: center;
+}
+.time .input-group input{
+  text-align: center;
+  border: none;
+}
+.time .input-group input:hover{
+
+  border: 1px solid silver;
 }
 .detail{
   width: 700px;

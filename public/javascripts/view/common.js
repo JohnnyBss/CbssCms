@@ -19,6 +19,12 @@ function setActiveNav() {
       || pathname.indexOf('editNews') >= 0){
     pathname = '/news';
   }
+
+  if(pathname.indexOf('item') >= 0
+      || pathname.indexOf('detail') >= 0
+      || pathname.indexOf('detailView') >= 0){
+    pathname = '/item';
+  }
   $('.nav-list li.active').removeClass('active');
   $('.nav-list li.open').removeClass('open').removeClass('active');
   var element = $('.nav-list a[href="' + pathname + '"]');

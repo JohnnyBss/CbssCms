@@ -67,7 +67,7 @@ $(document).ready(function () {
           layer.msg(res.msg);
           return false;
         }
-        $('.detail-content').empty();
+        $('.detail-info').empty();
         if(res.dataList.length === 0){
           $('#btn-save').attr('disabled', 'disabled');
           $('#btn-delete').attr('disabled', 'disabled');
@@ -78,7 +78,7 @@ $(document).ready(function () {
         $.each(res.dataList, function (index, data) {
           switch (data.contentType){
             case 'I':
-              $('.detail-content').append(
+              $('.detail-info').append(
                   '<div class="content-hover port-1 effect-1" data-detail-id="' + data.detailID + '">\n' +
                   '  <div class="image-box">\n' +
                   '    <img src="' + data.content + '" alt="">\n' +
@@ -90,10 +90,23 @@ $(document).ready(function () {
               break;
             case 'F':
               let fileName = data.content.substr(data.content.lastIndexOf('/') + 1);
-              $('.detail-content').append(
+              $('.detail-info').append(
                   '<div class="group-file" data-detail-id="' + data.detailID + '">\n' +
                   '  <img src="/images/icons/pdf.png" alt="">\n' +
                   '  <a href="' + data.content + '" target="_blank">' + fileName + '</a>\n' +
+                  '</div>');
+              break;
+            case 'V':
+              $('.detail-info').append(
+                  '<div class="content-hover group-video port-1 effect-1" data-detail-id="' + data.detailID + '">\n' +
+                  '  <div class="video-box">\n' +
+                  '    <video src="' + data.content + '" controls="controls">\n' +
+                  '      您使用的浏览器不支持视频播放，请使用Chrome浏览器。' +
+                  '    </video>\n' +
+                  '  </div>\n' +
+                  '  <div class="video-desc" data-detail-id = "' + data.detailID + '">\n' +
+                  '    <p></p>\n' +
+                  '  </div>\n' +
                   '</div>');
               break;
           }
@@ -119,6 +132,7 @@ $(document).ready(function () {
             return false;
           }
           $(obj).find('div.image-desc').find('p').text(res.data === null ? '' : res.data.content);
+          $(obj).find('div.video-desc').find('p').text(res.data === null ? '' : res.data.content);
         },
         error: function(XMLHttpRequest){
           layer.msg('远程服务无响应，状态码：' + XMLHttpRequest.status);

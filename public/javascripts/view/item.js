@@ -54,10 +54,12 @@ $(document).ready(function () {
   }
 
   function setFileNodeIcon() {
-    let nodeTitle = $('div.treeNode[data-node-type="D"]').find('span.title').text();
-    let nodeTitleHtml = '<i class="icon-file-text" style="color: #90d900; font-size: 16px; margin-right: 8px"></i>' + nodeTitle;
-    $('div.treeNode[data-node-type="D"]').find('i.icon-file').remove();
-    $('div.treeNode[data-node-type="D"]').find('span.title').html(nodeTitleHtml);
+    let detailNode = $('div.treeNode[data-node-type="D"]');
+    $(detailNode).find('i.icon-file').remove();
+    $(detailNode).find('i.icon-control').after('<i class="icon-file-text" style="color: #90d900; font-size: 16px; margin-right: 8px; position: relative; top: 6px"></i>');
+    // let nodeTitleHtml = '<i class="icon-file-text" style="color: #90d900; font-size: 16px; margin-right: 8px"></i>' + nodeTitle;
+    // $('div.treeNode[data-node-type="D"]').find('i.icon-file').remove();
+    // $('div.treeNode[data-node-type="D"]').find('span.title').html(nodeTitleHtml);
   }
 
   function bindTreeViewEvents() {

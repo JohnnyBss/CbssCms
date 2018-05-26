@@ -9,6 +9,7 @@ $(document).ready(function () {
     // setReadonlyStatus();
     initUploadPlugin('#file-upload-image', ['png','jpg', 'jpeg'], true);
     initUploadPlugin('#file-upload-file', ['pdf'], true);
+    initUploadPlugin('#file-upload-video', ['webm'], true);
     checkItemIdIsValid();
     showData();
   }
@@ -29,16 +30,6 @@ $(document).ready(function () {
       }
     })
   }
-
-  // function setReadonlyStatus() {
-  //   if(_flag === 's'){
-  //     $('#btn-back').hide();
-  //     $('#btn-show-upload-image').hide();
-  //     $('#btn-show-upload-file').hide();
-  //     $('#btn-save').hide();
-  //     $('#btn-delete').hide();
-  //   }
-  // }
 
   function checkItemIdIsValid() {
     if(_itemID === 'undefined' || _itemID === '' || isNaN(_itemID)){
@@ -94,7 +85,7 @@ $(document).ready(function () {
           layer.msg(res.msg);
           return false;
         }
-        $('.detail-content').empty();
+        $('.detail-info').empty();
         if(res.dataList.length === 0){
           $('#btn-save').attr('disabled', 'disabled');
           $('#btn-delete').attr('disabled', 'disabled');
@@ -105,7 +96,7 @@ $(document).ready(function () {
         $.each(res.dataList, function (index, data) {
           switch (data.contentType){
             case 'I':
-              $('.detail-content').append(
+              $('.detail-info').append(
                   '<div class="content-hover port-1 effect-1" data-detail-id="' + data.detailID + '">\n' +
                   '  <div class="image-box">\n' +
                   '    <img src="' + data.content + '" alt="">\n' +
@@ -123,18 +114,39 @@ $(document).ready(function () {
               break;
             case 'F':
               let fileName = data.content.substr(data.content.lastIndexOf('/') + 1);
-              $('.detail-content').append(
+              $('.detail-info').append(
                   '<div class="group-file" data-detail-id="' + data.detailID + '">\n' +
                   '  <img src="/images/icons/pdf.png" alt="">\n' +
                   '  <a href="' + data.content + '" target="_blank">' + fileName + '</a>\n' +
                   '  <i class="icon-trash del-file" data-detail-id="' + data.detailID + '"></i>' +
                   '</div>');
               break;
+            case 'V':
+              $('.detail-info').append(
+                  '<div class="content-hover group-video port-1 effect-1" data-detail-id="' + data.detailID + '">\n' +
+                  '  <div class="video-box">\n' +
+                  '    <video src="' + data.content + '" controls="controls">\n' +
+                  '      您使用的浏览器不支持视频播放，请使用Chrome浏览器。' +
+                  '    </video>\n' +
+                  '  </div>\n' +
+                  '  <div class="video-desc" data-detail-id = "' + data.detailID + '">\n' +
+                  '    <p></p>\n' +
+                  '  </div>\n' +
+                  '  <div class="video-option">\n' +
+                  '    <a href="javascript:" class="add-memo" data-detail-id="' + data.detailID + '">\n' +
+                  '      <i class="icon-pencil"></i>\n' +
+                  '    </a>\n' +
+                  '    <a href="javascript:" class="del-video" data-detail-id="' + data.detailID + '">\n' +
+                  '      <i class="icon-trash red"></i>\n' +
+                  '    </a>\n' +
+                  '  </div>\n' +
+                  '</div>');
+              break;
           }
         });
 
         //添加图片说明事件
-        $(".detail-content .text-desc").on("click","a.add-memo", function() {
+        $(".detail-info .text-desc").on("click","a.add-memo", function() {
           _detailId4Memo = $(this).attr('data-detail-id');
           let memo = $('div.image-desc[data-detail-id="' + _detailId4Memo + '"]').find('p').text();
           $('#from-field-image-memo').val(memo);
@@ -142,7 +154,7 @@ $(document).ready(function () {
         });
 
         //删除图片事件
-        $(".detail-content .text-desc").on("click","a.del-image", function() {
+        $(".detail-info .text-desc").on("click","a.del-image", function() {
           let detailId = $(this).attr('data-detail-id');
           let confirmMsg = '您确定要删除这张图片吗？';
           bootbox.confirm(confirmMsg, function(result) {
@@ -165,9 +177,40 @@ $(document).ready(function () {
           });
         });
 
+        //添加视频说明事件
+        $(".detail-info .group-video").on("click","a.add-memo", function() {
+          _detailId4Memo = $(this).attr('data-detail-id');
+          let memo = $('div.group-video[data-detail-id="' + _detailId4Memo + '"]').find('p').text();
+          $('#from-field-video-memo').val(memo);
+          $('#video-memo-modal').modal('show');
+        });
+
+        //删除视频事件
+        $(".detail-info .group-video").on("click","a.del-video", function() {
+          let detailId = $(this).attr('data-detail-id');
+          let confirmMsg = '您确定要删除这个视频吗？';
+          bootbox.confirm(confirmMsg, function(result) {
+            if(result) {
+              $.ajax({
+                url: '/detail/deleteDetailImage?itemID=' + _itemID + '&detailID=' + detailId,
+                type: 'delete',
+                success: function (res) {
+                  if(res.err){
+                    layer.msg(res.msg);
+                    return false;
+                  }
+                  $('.content-hover[data-detail-id="' + detailId + '"]').remove();
+                },
+                error: function(XMLHttpRequest){
+                  layer.msg('远程服务无响应，状态码：' + XMLHttpRequest.status);
+                }
+              });
+            }
+          });
+        });
 
         //删除文件事件
-        $(".detail-content .group-file").on("click","i.del-file", function() {
+        $(".detail-info .group-file").on("click","i.del-file", function() {
           let detailId = $(this).attr('data-detail-id');
           let confirmMsg = '您确定要删除这个文件吗？';
           bootbox.confirm(confirmMsg, function(result) {
@@ -210,6 +253,7 @@ $(document).ready(function () {
             return false;
           }
           $(obj).find('div.image-desc').find('p').text(res.data === null ? '' : res.data.content);
+          $(obj).find('div.video-desc').find('p').text(res.data === null ? '' : res.data.content);
         },
         error: function(XMLHttpRequest){
           layer.msg('远程服务无响应，状态码：' + XMLHttpRequest.status);
@@ -268,6 +312,20 @@ $(document).ready(function () {
     }
   });
 
+  $('#btn-save-video-memo').click(function () {
+    let memo = $.trim($('#from-field-video-memo').val());
+    if(memo.length === 0){
+      layer.msg('请输入视频说明文字。');
+      return false;
+    }
+    let result = saveDetailInfo(_itemID, 'T', memo, _detailId4Memo, $('#select-year').val(), $('#select-quarter').val());
+    if(result){
+      $('div.group-video[data-detail-id="' + _detailId4Memo + '"]').find('p').text(memo);
+      $('#video-memo-modal').modal('hide');
+      layer.msg('保存成功！');
+    }
+  });
+
   /**
    * 返回事件
    */
@@ -287,6 +345,13 @@ $(document).ready(function () {
    */
   $('#btn-show-upload-file').click(function () {
     $('#file-upload-modal').modal('show');
+  });
+
+  /**
+   * 上传视频事件
+   */
+  $('#btn-show-upload-video').click(function () {
+    $('#video-upload-modal').modal('show');
   });
 
   /**
@@ -394,6 +459,32 @@ $(document).ready(function () {
     }
     //clearUploadStatus();
   });
+
+  /**
+   * 将上传的视频地址保存到数据库
+   */
+  $('#btn-save-upload-video').click(function () {
+    if(!uploadTools.isUploaded){
+      layer.msg('请先上传视频。');
+      return false;
+    }
+
+    let fileList = uploadTools.uploadedList;
+    let saveResult = false;
+
+    $.each(fileList, function (index, file) {
+      saveResult = saveDetailInfo(_itemID, 'V', file, 0, $('#select-year').val(), $('#select-quarter').val());
+    });
+
+    if(saveResult){
+      // $('#image-upload-modal').modal('hide');
+      // showData();
+      // layer.msg('保存成功！');
+      location.reload();
+    }
+    clearUploadStatus();
+  });
+
 
   $('.johnny-select').change(function () {
     showData();

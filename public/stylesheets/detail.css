@@ -1,4 +1,4 @@
-.detail-content{
+.detail-info{
   clear: both;
   width: 550px;
   margin: 35px auto 0;
@@ -6,7 +6,9 @@
 .view{
   width: 160px;
 }
-
+.video-option .add-memo{
+  margin-right: 5px;
+}
 .select-time{
   float: right;
 }
@@ -16,19 +18,28 @@
   margin-right: 10px;
 }
 
+.content-hover{
+  margin-bottom: 15px;
+}
 .content-hover img{
   width: 550px;
 }
 .image-desc{
   margin-top: 15px !important;
 }
-.image-desc p{
+.image-desc, .video-desc p{
   text-align: left;
+  margin-top: 5px;
   font-family: cursive;
 }
+/*.image-desc, video-desc p{*/
+  /*text-align: left;*/
+  /*font-family: cursive;*/
+/*}*/
+
 .group-file{
   width: 550px;
-  margin: 35px auto 0;
+  margin: 15px auto;
 }
 .group-file img{
   width: 30px;

@@ -25,7 +25,7 @@
 
   <div class="row" id="app">
     <div class="col-xs-12">
-      <a href="/editNews" class="btn btn-primary">
+      <a href="/editNews?saveType=add" class="btn btn-primary">
         <i class="icon-plus"></i>
         添加
       </a>
@@ -38,9 +38,10 @@
           <thead>
           <tr>
             <th class="center">
-              标题缩略图
+              缩略图
             </th>
             <th>标题</th>
+            <th>新闻日期</th>
             <th class="hidden-480">添加</th>
             <th>
               <i class="icon-time bigger-110 hidden-480"></i>
@@ -61,6 +62,7 @@
                 <img src="{{this.thumbnailUrl}}" alt="">
               </td>
               <td>{{this.newsTitle}}</td>
+              <td>{{this.newsDate}}</td>
               <td>{{this.inUser}}</td>
               <td>{{this.inDate}}</td>
               <td>{{this.lastEditUser}}</td>

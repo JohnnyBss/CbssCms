@@ -8,7 +8,7 @@ $(document).ready(function () {
     $('.date-picker').datepicker({
       autoclose: true,
       todayHighlight: true
-    })
+    });
     setDefaultDate();
     initUploadPlugin('#file-upload-image', ['png','jpg', 'jpeg'], false);
     initUploadPlugin('#file-upload-thumbnail', ['png','jpg', 'jpeg'], false);
@@ -17,7 +17,7 @@ $(document).ready(function () {
 
   function setDefaultDate(){
     let date = new Date().format('yyyy-MM-dd');
-    $('.time p').text(date);
+    $('#id-date-picker-1').val(date);
   }
 
   function initUploadPlugin(selector, fileType, multiple){
@@ -49,6 +49,7 @@ $(document).ready(function () {
             layer.msg(res.msg);
           }else{
             $('#form-field-newsTitle').val(res.data.newsTitle);
+            $('#id-date-picker-1').val(res.data.newsDate);
             $('div.news-title-thumbnail img').attr('src', res.data.thumbnailUrl);
             $.each(res.data.newsContentList, function (index, content) {
               addNewsPart(content.newsContent, content.newsContentType);
@@ -239,11 +240,16 @@ $(document).ready(function () {
 
   function checkData(){
     let newsTitle = $.trim($('#form-field-newsTitle').val());
+    let newsDate = $.trim($('#id-date-picker-1').val());
     let newsThumbnailUrl = $('div.news-title-thumbnail img').attr('src');
     let newsContentCount = $('div.detail').children().length;
 
     if(newsTitle.length === 0){
       layer.msg('请填写新闻标题。');
+      return false;
+    }
+    if(newsDate.length === 0){
+      layer.msg('请填写新闻日期。');
       return false;
     }
 
@@ -261,6 +267,7 @@ $(document).ready(function () {
 
   function saveNews(){
     let newsTitle = $.trim($('#form-field-newsTitle').val());
+    let newsDate = $.trim($('#id-date-picker-1').val());
     let newsThumbnailUrl = $('div.news-title-thumbnail img').attr('src');
     let newsContentArray = $('div.detail').children('div.part');
     let newsContentObj = [];
@@ -285,6 +292,7 @@ $(document).ready(function () {
         dataType: 'json',
         data: {
           newsTitle: newsTitle,
+          newsDate: newsDate,
           thumbnailUrl: newsThumbnailUrl,
           newsContentJson: JSON.stringify(newsContentObj),
           loginUser: getLoginUser()
@@ -310,6 +318,7 @@ $(document).ready(function () {
         data: {
           newsID: _updNewsID,
           newsTitle: newsTitle,
+          newsDate: newsDate,
           thumbnailUrl: newsThumbnailUrl,
           newsContentJson: JSON.stringify(newsContentObj),
           loginUser: getLoginUser()
