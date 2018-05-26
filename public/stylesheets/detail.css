@@ -1,0 +1,46 @@
+.detail-content{
+  clear: both;
+  width: 550px;
+  margin: 35px auto 0;
+}
+.view{
+  width: 160px;
+}
+
+.select-time{
+  float: right;
+}
+
+.select-time .view{
+  float: left;
+  margin-right: 10px;
+}
+
+.content-hover img{
+  width: 550px;
+}
+.image-desc{
+  margin-top: 15px !important;
+}
+.image-desc p{
+  text-align: left;
+  font-family: cursive;
+}
+.group-file{
+  width: 550px;
+  margin: 35px auto 0;
+}
+.group-file img{
+  width: 30px;
+}
+.del-file{
+  margin-left: 15px;
+  color: red;
+  cursor: pointer;
+}
+.icon-double-angle-right{
+  margin-right: 5px;
+}
+.icon-angle-right{
+  margin-right: 5px;
+}

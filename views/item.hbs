@@ -1,0 +1,98 @@
+<link rel="stylesheet" href="/stylesheets/jtree.css" />
+<link rel="stylesheet" href="/stylesheets/rmenu/rmenu.css" />
+<div class="breadcrumbs" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="icon-home home-icon"></i>
+      <a href="/index">主页</a>
+    </li>
+    <li>
+      <a href="#">服务档案信息管理</a>
+    </li>
+    <li class="active">考评内容管理</li>
+  </ul>
+</div>
+
+<div class="page-content">
+  <div class="page-header">
+    <h1>
+      服务档案信息管理
+      <small>
+        <i class="icon-double-angle-right"></i>
+        考评内容管理
+      </small>
+    </h1>
+  </div>
+  <div class="row" id="app">
+    <div class="col-xs-12">
+      <div class="space-6"></div>
+      <div id="treeView"></div>
+
+      <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title"></h4>
+            </div>
+            <div class="alert alert-danger store-alert hidden">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <span></span>
+            </div>
+            <div class="modal-body">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-sm-2 control-label form-label-itemName"></label>
+                  <div class="col-sm-10">
+                    <textarea class="form-control" maxlength="50" id="form-field-itemName" rows="3"></textarea>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              <button type="button" class="btn btn-primary" id="btn-save">保存</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div>
+    </div>
+    <ul class="contextmenu right-menu-root">
+      <li class="add-module">
+        <a href="#">
+          <i class="icon-plus"></i>
+          添加考评模块
+        </a>
+      </li>
+    </ul>
+    <ul class="contextmenu right-menu-module">
+      <li class="add-block"><a href="javascript:"><i class="icon-plus"></i> 添加考评项目</a></li>
+      <li class="change-module"><a href="javascript:"><i class="icon-pencil"></i> 更新考评模块</a></li>
+      <li class="remove-item"><a href="javascript:"><i class="icon-trash"></i> 删除考评模块</a></li>
+    </ul>
+    <ul class="contextmenu right-menu-block">
+      <li class="add-item"><a href="javascript:"><i class="icon-plus"></i> 添加考评点</a></li>
+      <li class="change-block"><a href="javascript:"><i class="icon-pencil"></i> 更新考评项目</a></li>
+      <li class="remove-item"><a href="javascript:"><i class="icon-trash"></i> 删除考评项目</a></li>
+    </ul>
+    <ul class="contextmenu right-menu-item">
+      <li class="add-item"><a href="javascript:"><i class="icon-plus"></i> 添加子考评点</a></li>
+      <li class="change-item"><a href="javascript:"><i class="icon-pencil"></i> 更新考评点</a></li>
+      <li class="remove-item"><a href="javascript:"><i class="icon-trash"></i> 删除考评点</a></li>
+      <li class="add-detail"><a href="javascript:"><i class="icon-plus"></i> 添加详细内容 </a></li>
+    </ul>
+    <ul class="contextmenu right-menu-detail">
+      <li class="search-detail"><a href="javascript:;"><i class="icon-search"></i> 查看详细内容</a></li>
+    </ul>
+  </div>
+</div>
+
+<input type="hidden" value="{{moduleID}}" id="hidden-moduleID">
+<input type="hidden" value="{{blockID}}" id="hidden-blockID">
+<input type="hidden" value="{{itemID}}" id="hidden-itemID">
+<input type="hidden" value="{{currentPageNum}}" id="hidden-currentPageNum">
+<script src="/javascripts/jtree/tools.js"></script>
+<script src="/javascripts/jtree/handledata.js"></script>
+<script src="/javascripts/jtree/jtree.js"></script>
+<script src="/javascripts/rmenu/rmenu.js"></script>
+<script src="/javascripts/view/item.js"></script>

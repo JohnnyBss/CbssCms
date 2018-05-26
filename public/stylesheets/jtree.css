@@ -1,0 +1,73 @@
+/** { margin: 0; padding: 0; }*/
+/*body { font-size: 14px; color: #333; font-family: "Microsoft Yahei"; }*/
+ul, li { list-style-type: none; }
+
+#treeView ul{
+  margin: 0;
+  /*width: 600px;*/
+  /*margin: 20px auto 0;*/
+  /*border: 1px solid #f2f2f2;*/
+}
+.treeNode {
+  height: 32px;
+  border: 1px solid #fff;
+  border-width: 1px 0;
+  cursor: pointer;
+  font-size: 0;
+}
+.treeNode:hover {
+  background: #f4f9fd;
+  border-color: #e5f0fb;
+}
+.treeNode-cur,
+.treeNode-cur:hover {
+  background: #e5f0fb;
+  border-color: #BBD4EF #fff;
+}
+.icon {
+  display: inline-block;
+  background: url(../images/icon.png) no-repeat;
+  vertical-align: middle;
+}
+.icon-minus {
+  width: 15px;
+  height: 15px;
+  margin: 0 4px;
+  background-position: -30px -22px;
+}
+.icon-add {
+  width: 15px;
+  height: 15px;
+  margin: 0 4px;
+  background-position: -30px 0;
+}
+.icon-file {
+  width: 22px;
+  height: 18px;
+  margin-right: 5px;
+  background-position: 0 -22px;
+}
+.title {
+  position: relative;
+  top: 6px;
+  font-size: 14px;
+}
+
+.treeNode-empty .icon-minus {
+  background-position: -999px -999px;
+}
+.treeNode-empty .icon-add {
+  background-position: -999px -999px;
+}
+
+#treeView ul.none {
+  display: none;
+}
+#treeView .icon-control{
+  width: 15px;
+  height: 15px;
+}
+#treeView .icon-file{
+  width: 22px;
+  height: 18px;
+}

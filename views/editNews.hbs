@@ -1,0 +1,152 @@
+<link rel="stylesheet" href="/stylesheets/fileUpload/iconfont.css" />
+<link rel="stylesheet" href="/stylesheets/fileUpload/fileUpload.css">
+<link rel="stylesheet" href="/stylesheets/ace/bootstrap-datepicker3.min.css" />
+<link rel="stylesheet" href="/stylesheets/news.css" />
+
+<div class="breadcrumbs" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="icon-home home-icon"></i>
+      <a href="/index">主页</a>
+    </li>
+    <li>
+      <a href="#">营业网点信息管理</a>
+    </li>
+    <li class="active">新闻管理</li>
+  </ul>
+</div>
+
+<div class="page-content">
+  <div class="page-header">
+    <h1>
+      新闻管理
+      <small>
+        <i class="icon-double-angle-right"></i>
+        新闻编辑
+      </small>
+    </h1>
+  </div>
+
+  <div class="row" id="app">
+    <div class="col-xs-12">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="btn-bar">
+            <a href="/news" class="btn btn-default">
+              <i class="icon-hand-left"></i>
+              返回列表
+            </a>
+            <button type="button" class="btn btn-info" id="btn-show-add-text">
+              <i class="icon-file-text"></i>
+              添加文字
+            </button>
+            <button type="button" class="btn btn-primary" id="btn-show-add-image">
+              <i class="icon-jfi-file-image"></i>
+              添加图片
+            </button>
+            <button type="button" class="btn btn-success" id="btn-save">
+              <i class="icon-save"></i>
+              保存新闻
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="row news-content">
+        <div class="col-xs-3">
+          <div class="news-title-thumbnail">
+            <img src="/images/upload/demo.jpg" alt="">
+            <button type="button" class="btn btn-pink" id="btn-upload-thumbnail">上传图片</button>
+          </div>
+        </div>
+        <div class="col-xs-9">
+          <div class="title">
+            <input type="text" id="form-field-newsTitle" placeholder="标题">
+          </div>
+          <div class="time">
+            <!--<p></p>-->
+            <div class="input-group">
+              <input class="form-control date-picker" id="id-date-picker-1" type="text" data-date-format="yyyy-mm-dd" />
+              <span class="input-group-addon">
+                <i class="icon-calendar bigger-110"></i>
+              </span>
+            </div>
+          </div>
+          <div class="detail">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" tabindex="-1" role="dialog" id="modal-newsText">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">编辑文字</h4>
+        </div>
+        <div class="alert alert-danger store-alert hidden">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <span></span>
+        </div>
+        <div class="modal-body">
+          <textarea class="form-control" rows="6" maxlength="500" placeholder="最多输入500个文字" id="from-field-news-text"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-primary" id="btn-add-text">添加</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div>
+
+  <div class="modal fade" tabindex="-1" role="dialog" id="modal-newsImage">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">上传图片（*.jpg, *.jpeg, *.png）</h4>
+        </div>
+        <div class="alert alert-danger store-alert hidden">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <span></span>
+        </div>
+        <div class="modal-body">
+          <div id="file-upload-image" class="fileUploadContent"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-primary" id="btn-add-image">保存</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div>
+  <div class="modal fade" tabindex="-1" role="dialog" id="modal-newsThumbnail">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">上传图片（*.jpg, *.jpeg, *.png）</h4>
+        </div>
+        <div class="alert alert-danger store-alert hidden">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <span></span>
+        </div>
+        <div class="modal-body">
+          <div id="file-upload-thumbnail" class="fileUploadContent"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-primary" id="btn-add-thumbnail">保存</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div>
+
+</div>
+
+<input type="hidden" value="{{newsID}}" id="hidden-newsID">
+<input type="hidden" value="{{saveType}}" id="hidden-saveType">
+<script src="/javascripts/fileUpload/fileUpload.js"></script>
+<script src="/javascripts/datepicker/bootstrap-datepicker.min.js"></script>
+<script src="/javascripts/view/editNews.js"></script>

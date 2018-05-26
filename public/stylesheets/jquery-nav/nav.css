@@ -1,0 +1,76 @@
+/*@charset "utf-8";*/
+/**{margin:0;padding:0;list-style-type:none;}*/
+#nav ul{
+  list-style-type:none;
+}
+#nav a,img{border:0;color:#333;text-decoration:none;}
+#nav .hide{display:none}
+#nav .clearfix:after{visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0}
+#nav .clearfix{*zoom:1}
+#nav em,i,s{font-style:normal;}
+
+#nav a{
+  text-decoration: none;
+}
+/* 导航样式 */
+#nav .header-wrap{background-color:#fff;width:100%}
+#nav .navwrap{background:#9b0000 url(../images/nav-bg.jpg) repeat-x;height:36px;border-top:1px #9c1900 solid;border-bottom:1px #8a1501 solid;box-shadow:0 1px 2px #999;-webkit-box-shadow:0 1px 2px #999;-moz-box-shadow:0 1px 2px #999}
+#nav{height:36px;margin:0 auto;position:relative;padding:0;z-index:99}
+#nav .navbar{height:36px;padding-left:210px;position:relative}
+#nav .navbar a{float:left;width:auto;text-align:center;height:36px;line-height:36px;color:#fff;padding:0 15px;text-decoration:none;font-size:15px;font-family:"\5FAE\8F6F\96C5\9ED1";white-space:nowrap;border-right:1px #931900 solid;border-left:1px #a52600 solid;position:relative}
+#nav .navbar a.first{border-left:0 none}
+#nav .navbar a.last{border-right:0 none}
+#nav .navbar a:hover{background-color:#8d1e01;color:#fff}
+#nav .navbar a.current{background-color:#6c1500;border-right:1px #6c1500 solid;box-shadow:0 0 10px #4f0000 inset;-webkit-box-shadow:0 0 10px #4f0000 inset;-moz-box-shadow:0 0 10px #4f0000 inset}
+#nav .navbar a:hover{text-decoration:none}
+#nav .navbar a.current:hover{color:#fff}
+#nav .navbar .navbt{width:105px;height:30px;position:absolute;top:3px;right:10px;background:url(../../images/navbt.jpg) no-repeat;border:0 none;float:none;font-size:14px;line-height:30px;padding:0}
+#nav a.navbt span{background:url(../../images/iconmap.jpg) no-repeat 1px 3px;padding-left:18px}
+#nav .navbar a.navbt:hover{background:transparent url(../../images/navbt-hover.jpg) no-repeat}
+#nav .navbar a.navbt:hover span{background-image:url(../../images/iconmap-hover.jpg)}
+
+#nav .pros{position:absolute;top:0px;left:0;z-index:1000;width:210px;background-color:#d03322}
+#nav .pros h2{margin: 0; width:194px;height:38px;line-height:38px;color:#fff;padding-left:16px;font-size:16px;font-weight:400;font-family:"\5FAE\8F6F\96C5\9ED1"}
+#nav .subpage h2{background:url(../../images/icon-dropdown.jpg) no-repeat 122px center;cursor:pointer}
+#nav .subpage .prosul{display:none}
+#nav .prosul{
+  padding-left:3px;
+  width:207px;
+  margin-top:2px;
+  _overflow:hidden;
+  /*height:245px*/
+}
+#nav .prosul li,.prosul i{background:url(../../images/iconcatg.png) no-repeat;}
+#nav li.food{background-position:10px 15px}
+#nav li.enjoy{background-position:10px -35px}
+#nav li.women{background-position:10px -85px}
+#nav li.life{background-position:10px -135px}
+#nav li.travel{background-position:10px -185px}
+#nav li.goods{background-position:10px -235px}
+#nav .prosul li{line-height:50px;height:50px;_overflow:hidden;border-bottom:1px #bb2d1e dashed;margin-right:3px;padding-left:38px}
+#nav .prosul li.prosahover{border-bottom:1px #fff solid;background-color:#fff;margin-right:0;padding-right:3px;}
+#nav .prosul a{color:#ffd0c0;padding-right:8px;_padding-right:6px;white-space:nowrap;display:inline-block;height:50px}
+#nav .prosul a.hot{background:url(../../images/icon-hot.png) right 8px no-repeat}
+#nav .prosul li.prosahover a.hot{background-image:url(../../images/icon-hot-hover.png)}
+#nav .prosul li.prosahover a{color:#636363}
+#nav .prosul li a.ti{font-size:14px;font-family:"\5FAE\8F6F\96C5\9ED1";color:#fff}
+#nav .prosul li.prosahover a.ti{color:#d03322}
+#nav .prosul li a:hover{color:#d03322}
+#nav .prosul li.nochild a:hover{color:#fff}
+#nav .prosul li i{float:right;display:block;width:3px;height:50px;text-indent:-999em;background-position:0 -276px;padding-right:12px}
+#nav .prosul li.prosahover i{background-position:0 -326px}
+#nav .prosul li.last{border-bottom:0 none}
+#nav .prosul li.bd-solid{border-bottom:1px #c22900 solid}
+#nav .prosul li.hotareas{background-image:none;padding-left:12px;line-height:26px;height:106px;*overflow:hidden}
+#nav .prosul li.hotareas i{line-height:30px;margin-top:-2px;height:40px;background-position:0 -279px}
+#nav .prosul li.hotareas a{line-height:30px;height:30px}
+#nav .prosul li.hotareas a.hot{background-position:right 0}
+#nav .prosul li h2{padding-left:0;line-height:40px;display:inline;font-size:14px;font-weight:400;}
+#nav .prosul li.prosahover h2{color:#d03322}
+#nav .prosmore{padding:15px 0 15px 15px;position:absolute;z-index:999;left:210px;top:38px;background-color:#fff;border:2px #d03322 solid;border-left:0 none;width:214px}
+#nav .prosul .prosmore{text-align:left}
+#nav .prosul .prosmore span{float:left;height:36px;width:107px;line-height:22px}
+#nav .prosul li .prosmore a{height:18px;line-height:18px;padding:0 4px}
+#nav .prosul li .prosmore a:hover{background-color:#d03322;color:#fff}
+#nav .prosmore em{font-weight:400;padding-top:9px;display:inline-block}
+#nav .prosmore em.morehot{background:url(../../images/icon-hot-more.png) right top no-repeat;padding-right:22px}

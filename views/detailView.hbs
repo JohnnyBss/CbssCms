@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="/stylesheets/detail.css" />
+<link rel="stylesheet" href="/stylesheets/selectric/selectric.css" />
+
+<div class="breadcrumbs" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="icon-home home-icon"></i>
+      <a href="/index">主页</a>
+    </li>
+    <li>
+      <a href="#">服务档案信息管理</a>
+    </li>
+    <li class="active">考评内容管理</li>
+  </ul>
+</div>
+
+<div class="page-content">
+  <div class="page-header">
+    <h1>
+    </h1>
+  </div>
+  <div class="row" id="app">
+    <div class="col-xs-12">
+      <!--<div class="option-bar">-->
+        <!--<div class="option-bar-btn">-->
+          <!--<button type="button" class="btn btn-default" id="btn-back"><i class="icon-angle-left"></i>返回</button>-->
+        <!--</div>-->
+        <!--<div class="option-bar-select-time">-->
+          <!--<div class="view">-->
+            <!--<select id="select-year" class="johnny-select">-->
+              <!--<option value="2017">2017年</option>-->
+              <!--<option value="2018">2018年</option>-->
+            <!--</select>-->
+          <!--</div>-->
+          <!--<div class="view">-->
+            <!--<select id="select-quarter" class="johnny-select">-->
+              <!--<option value="1">第一季度</option>-->
+              <!--<option value="2">第二季度</option>-->
+              <!--<option value="3">第三季度</option>-->
+              <!--<option value="4">第四季度</option>-->
+            <!--</select>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+
+      <div class="detail-content"></div>
+    </div>
+  </div>
+</div>
+<input type="hidden" value="{{itemID}}" id="hidden-itemID">
+<input type="hidden" value="{{year}}" id="hidden-year">
+<input type="hidden" value="{{quarter}}" id="hidden-quarter">
+<input type="hidden" value="{{breadcrumbs}}" id="hidden-breadcrumbs">
+<script src="/javascripts/selectric/jquery.selectric.js"></script>
+<script src="/javascripts/view/detailView.js"></script>

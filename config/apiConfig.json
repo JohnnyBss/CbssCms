@@ -1,0 +1,23 @@
+{
+  "StoreService": {
+    "host": "localhost",
+    "port": 8080,
+    "path": {
+      "module": "/api/module",
+      "moduleExist": "/api/module/exist",
+      "block": "/api/block",
+      "blockExist": "/api/block/exist",
+      "blockOfModule": "/api/block/module",
+      "item": "/api/item",
+      "itemExist": "/api/item/exist",
+      "itemOfBlock": "/api/item/block",
+      "detail": "/api/detail",
+      "detail4Item": "/api/detail/item",
+      "detail4ImageMemo": "/api/detail/imageMemo",
+      "deleteDetailImage": "/api/detail/deleteImage",
+      "deleteDetailOfItem": "/api/detail/deleteOfItem",
+      "saveDetailItem": "/api/detailItem",
+      "news": "/api/news"
+    }
+  }
+}

@@ -1,0 +1,64 @@
+#data-list tbody img{
+  width: 45px;
+}
+.btn-bar{
+  padding: 15px;
+}
+.news-content {
+  padding: 15px;
+}
+.news-title-thumbnail{
+  margin: 0 auto;
+}
+.news-title-thumbnail img{
+  width: 200px;
+  height: 200px;
+}
+.news-title-thumbnail button{
+  margin-top: 15px;
+  width: 200px;
+}
+.title input{
+  width: 700px;
+  height: 55px;
+  font-size: 25px;
+  text-align: center;
+  color: #1a1a1a;
+  border: none;
+  border-bottom: 1px solid silver;
+}
+.time p{
+  width: 700px;
+  margin-top: 5px;
+  text-align: center;
+}
+.detail{
+  width: 700px;
+  margin-top: 5px;
+  text-align: center;
+}
+.detail img{
+  width: 500px;
+  margin-top: 35px;
+}
+.detail p{
+  width: 500px;
+  margin: 35px auto 0;
+  text-align: left;
+}
+.option{
+  margin-top: 8px;
+}
+.option i{
+  margin-right: 5px;
+  font-size: 14px;
+}
+.option i.icon-pencil{
+  color: #1d6fa6;
+}
+.option i.icon-trash{
+  color: #761c19;
+}
+.option i.icon-circle-arrow-down, i.icon-circle-arrow-up{
+  color: #00be67;
+}

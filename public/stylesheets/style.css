@@ -1,0 +1,57 @@
+body{
+  font-size: 13px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.no-margin-bottom{
+  margin-bottom: 0;
+}
+.check-error{
+  border: 1px solid #ff2900 !important;
+}
+.alert-warning{
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+.input-readonly{
+  border: none !important;
+  background-color: #ffffff !important;
+}
+.form-control-static{
+  margin-top: -4px;
+}
+.table-col-ellipsis{
+  width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+}
+.table th,td{
+  vertical-align: middle !important;
+}
+.brand-upd-image{
+  padding-bottom: 15px;
+}
+.brand-upd-image img{
+  height: 160px;
+}
+.page-body{
+  padding: 15px;
+}
+.page-body .row{
+  height: 50px;
+}
+.page-body .control-label{
+  margin-top: 3px;
+  text-align: right;
+}
+.page-body .form-control-static{
+  margin-top: -2px;
+}
+.text-number{
+  ime-mode: disabled;
+  text-align: right;
+}
+.margin-top-15{
+  margin-top: 15px;
+}
