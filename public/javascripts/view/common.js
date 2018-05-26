@@ -138,7 +138,7 @@ function showLoginUser() {
   var cookie = getCookie('loginUser');
   if(cookie !== null){
     var loginUser = JSON.parse(cookie);
-    $('li.light-blue span.user-info>span').text(loginUser.administratorName);
+    $('li.light-blue span.user-info>span').text(loginUser.userName);
   }
 }
 
@@ -155,7 +155,7 @@ function getLoginUser() {
   var cookie = getCookie('loginUser');
   if(cookie !== null){
     var loginUser = JSON.parse(cookie);
-    return loginUser.account;
+    return loginUser.cellphone;
   }
 
   return 'unknown';

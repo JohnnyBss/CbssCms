@@ -31,13 +31,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //登录拦截器
-// app.use(function (req, res, next) {
-//   var url = req.originalUrl;
-//   if (url != '/' && url.indexOf('/register') < 0 && req.cookies['loginUser'] === undefined) {
-//     return res.redirect("/");
-//   }
-//   next();
-// });
+app.use(function (req, res, next) {
+  var url = req.originalUrl;
+  if (url != '/' && url.indexOf('/register') < 0 && req.cookies['loginUser'] === undefined) {
+    return res.redirect("/");
+  }
+  next();
+});
 
 app.use('/', login);
 app.use('/index', index);

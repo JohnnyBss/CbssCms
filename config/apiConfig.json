@@ -20,7 +20,8 @@
       "news": "/api/news",
       "user": "/api/user",
       "userCellphone": "/api/user/cellphone",
-      "changePassword": "/api/user/changePassword"
+      "changePassword": "/api/user/changePassword",
+      "login": "/api/user/login"
     }
   }
 }

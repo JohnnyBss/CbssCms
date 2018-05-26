@@ -8,29 +8,20 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function (req, res, next) {
   var service = new commonService.commonInvoke('login');
-  var param = req.body.userName + '/' + req.body.password;
+  var param = req.body.cellphone + '/' + req.body.password;
 
   service.get(param, function (result) {
-    if(result.err || !result.content.result){
+    if(result.err){
       res.json({
         err: true,
         msg: result.msg
       });
     }else{
-      if(result.content.responseType === 'Failed'){
-        res.json({
-          err: false,
-          pass: false,
-          msg: result.content.responseMessage
-        });
-      }else{
-        res.json({
-          err: false,
-          pass: true,
-          userInfo: result.content.responseData,
-          msg: result.content.responseMessage
-        });
-      }
+      res.json({
+        err: !result.content.result,
+        msg: result.content.responseMessage,
+        userInfo: result.content.responseData
+      });
     }
   })
 });

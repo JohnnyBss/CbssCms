@@ -9,79 +9,74 @@
   <link rel='stylesheet' href='/stylesheets/style.css' />
   <script src="/javascripts/jquery-2.2.0/jquery-2.2.0.min.js"></script>
   <script src="/javascripts/vuejs/vue.js"></script>
+  <script src="/javascripts/layer/layer.js"></script>
+  <link rel="stylesheet" href='/stylesheets/login.css'>
 </head>
 <body class="login-layout">
-  <div class="main-container" id="app">
-    <div class="main-content">
-      <div class="row">
-        <div class="col-sm-10 col-sm-offset-1">
-          <div class="login-container">
-            <div class="center">
-              <h1>
-                <i class="icon-leaf green"></i>
-                <span class="red">交通银行服务档案</span>
-                <br>
-                <span class="white">后台管理系统</span>
-              </h1>
-              <h4 class="blue">&copy; 交通银行渭南朝阳大街支行</h4>
-            </div>
+<div class="main-container" id="app">
+  <div class="main-content">
+    <div class="row">
+      <div class="col-sm-10 col-sm-offset-1">
+        <div class="login-container">
+          <div class="center">
+            <h1>
+              <img src="images/logo.png" alt="">
+            </h1>
+          </div>
 
-            <div class="space-6"></div>
+          <div class="space-6"></div>
 
-            <div class="position-relative">
-              <div id="login-box" class="login-box visible widget-box no-border">
-                <div class="widget-body">
-                  <div class="widget-main">
-                    <h4 class="header blue lighter bigger">
-                      <i class="icon-coffee green"></i>
-                      请输入登陆账号
-                    </h4>
+          <div class="position-relative">
+            <div id="login-box" class="login-box visible widget-box no-border">
+              <div class="widget-body">
+                <div class="widget-main">
+                  <h4 class="header blue lighter bigger">
+                    交通银行服务档案后台管理系统
+                  </h4>
 
-                    <div class="alert alert-warning alert-dismissible hidden" role="alert">
-                      <strong>提示!</strong>
-                      <span></span>
-                    </div>
-                    <div class="space-6"></div>
-                    <form>
-                      <fieldset>
-                        <label class="block clearfix">
+                  <div class="alert alert-warning alert-dismissible hidden" role="alert">
+                    <strong>提示!</strong>
+                    <span></span>
+                  </div>
+                  <div class="space-6"></div>
+                  <form>
+                    <fieldset>
+                      <label class="block clearfix">
                           <span class="block input-icon input-icon-right">
-                            <input type="text" class="form-control" maxlength="50" v-model="userName" placeholder="用户名/手机号/邮箱" autofocus />
+                            <input type="text" class="form-control" maxlength="11" v-model="cellphone" placeholder="手机号" autofocus />
                             <i class="icon-user"></i>
                           </span>
-                        </label>
-                        <label class="block clearfix">
+                      </label>
+                      <label class="block clearfix">
                           <span class="block input-icon input-icon-right">
                             <input type="password" class="form-control" maxlength="15" v-model="password" placeholder="密码" />
                             <i class="icon-lock"></i>
                           </span>
-                        </label>
-                        <label class="block clearfix">
-                          <span class="block input-icon input-icon-right">
-                            <label>
-                                <input type="checkbox"> 记住我
-                            </label>
-                          </span>
-                        </label>
-                        <div class="clearfix">
-                          <button type="button" class="pull-right btn btn-sm btn-primary btn-block" :disabled="!enabledSave" @click="onLogin">
-                            <i class="icon-key"></i>
-                            登陆
-                          </button>
-                        </div>
-                        <div class="space-12"></div>
-                      </fieldset>
-                    </form>
-                  </div>
-                </div><!-- /widget-body -->
-              </div><!-- /login-box -->
-            </div><!-- /position-relative -->
-          </div>
-        </div><!-- /.col -->
-      </div><!-- /.row -->
-    </div>
-  </div><!-- /.main-container -->
-  <script src="/javascripts/view/common.js"></script>
-  <script src="/javascripts/view/login.js"></script>
+                      </label>
+                      <div class="clearfix">
+                        <button type="button" class="pull-right btn btn-sm btn-primary btn-block" :disabled="!enabledSave" @click="onLogin">
+                          <i class="icon-key"></i>
+                          登陆
+                        </button>
+                      </div>
+                      <div class="space-12"></div>
+
+                    </fieldset>
+                  </form>
+                </div>
+              </div><!-- /widget-body -->
+            </div><!-- /login-box -->
+          </div><!-- /position-relative -->
+
+          <div class="footer">&copy; 交通银行渭南分行</div>
+        </div>
+      </div><!-- /.col -->
+
+    </div><!-- /.row -->
+
+  </div>
+</div><!-- /.main-container -->
+<script src="/javascripts/view/common.js"></script>
+<script src="/javascripts/view/login.js"></script>
 </body>
 </html>
