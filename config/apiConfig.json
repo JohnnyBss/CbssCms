@@ -21,7 +21,8 @@
       "user": "/api/user",
       "userCellphone": "/api/user/cellphone",
       "changePassword": "/api/user/changePassword",
-      "login": "/api/user/login"
+      "login": "/api/user/login",
+      "sysName": "/api/systemName"
     }
   }
 }

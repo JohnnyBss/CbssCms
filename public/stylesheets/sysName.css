@@ -1,0 +1,10 @@
+.edit-group{
+  margin: 35px auto 0;
+  padding: 15px;
+  text-align: center;
+  width: 650px;
+}
+
+.edit-group input{
+  text-align: center;
+}

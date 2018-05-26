@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="/stylesheets/sysName.css" />
+<div class="breadcrumbs" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="icon-home home-icon"></i>
+      <a href="/index">主页</a>
+    </li>
+    <li>
+      <a href="#">营业网点信息管理</a>
+    </li>
+    <li class="active">客户端系统名称管理</li>
+  </ul>
+</div>
+
+<div class="page-content">
+  <div class="page-header">
+    <h1>
+      客户端系统名称管理
+      <small>
+        <i class="icon-double-angle-right"></i>
+        名称维护
+      </small>
+    </h1>
+  </div>
+
+  <div class="row" id="app">
+    <div class="col-xs-12">
+      <div class="space-6"></div>
+      <div class="edit-group">
+        <form>
+          <div class="form-group">
+            <input type="text" class="form-control" maxlength="14" v-model="sysName">
+          </div>
+          <button type="button" class="btn btn-primary btn-block" :disabled="!enabledSave" @click="onSave">
+            <i class="icon-save"></i>
+            保存
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="/javascripts/view/sysName.js"></script>
