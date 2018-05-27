@@ -22,7 +22,9 @@
       "userCellphone": "/api/user/cellphone",
       "changePassword": "/api/user/changePassword",
       "login": "/api/user/login",
-      "sysName": "/api/systemName"
+      "sysName": "/api/systemName",
+      "logo": "/api/logo",
+      "logo4Branch": "/api/logo/branch"
     }
   }
 }

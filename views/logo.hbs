@@ -1,0 +1,65 @@
+
+<link rel="stylesheet" href="/stylesheets/fileUpload/iconfont.css" />
+<link rel="stylesheet" href="/stylesheets/fileUpload/fileUpload.css">
+<link rel="stylesheet" href="/stylesheets/logo.css" />
+<div class="breadcrumbs" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="icon-home home-icon"></i>
+      <a href="/index">主页</a>
+    </li>
+    <li>
+      <a href="#">营业网点信息管理</a>
+    </li>
+    <li class="active">客户端系统Logo管理</li>
+  </ul>
+</div>
+
+<div class="page-content">
+  <div class="page-header">
+    <h1>
+      客户端系统Logo管理
+      <small>
+        <i class="icon-double-angle-right"></i>
+        Logo维护
+      </small>
+    </h1>
+  </div>
+
+  <div class="row" id="app">
+    <div class="col-xs-12">
+      <div class="space-6"></div>
+        <form class="form-logo">
+          <div class="form-group">
+            <img src="/images/upload/demo.jpg" class="client-logo">
+          </div>
+          <button type="button" class="btn btn-pink btn-block" id="btn-show-upload">上传图片</button>
+        </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modal-system-logo">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">上传图片（*.jpg, *.jpeg, *.png）</h4>
+      </div>
+      <div class="alert alert-danger store-alert hidden">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <span></span>
+      </div>
+      <div class="modal-body">
+        <div id="file-upload-logo" class="fileUploadContent"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="btn-add-logo">保存</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<script src="/javascripts/fileUpload/fileUpload.js"></script>
+<script src="/javascripts/view/logo.js"></script>
