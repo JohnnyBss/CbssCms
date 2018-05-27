@@ -1,5 +1,7 @@
 $(document).ready(function () {
   let _itemID = $('#hidden-itemID').val();
+  let _year = $('#hidden-year').val();
+  let _quarter = $('#hidden-quarter').val();
   let _flag = $('#hidden-flag').val();
   let _itemIdValid = true;
   let _detailId4Memo = 0;
@@ -43,9 +45,15 @@ $(document).ready(function () {
   }
 
   function setDropDownList(){
+    if(_year !== ''){
+      $('#select-year').find('option[value="' + _year + '"]').attr("selected","selected");
+    }
+    if(_quarter !== ''){
+      $('#select-quarter').find('option[value="' + _quarter + '"]').attr("selected","selected");
+    }
+
     let selectYear = $('#select-year').find('strong');
     let selectQuarter = $('#select-quarter').find('strong');
-
     // Get initial value
     selectYear.text($('#select-year').val());
     selectQuarter.text($('#select-quarter').val());
@@ -298,6 +306,14 @@ $(document).ready(function () {
 
   }
 
+  function reloadPage(){
+    let itemID = $('#hidden-itemID').val();
+    let year = $('#select-year').val();
+    let quarter = $('#select-quarter').val();
+    let breadcrumbs = $('#hidden-breadcrumbs').val();
+    location.href = '/detail?itemID=' + itemID + '&year=' + year + '&quarter=' + quarter + '&breadcrumbs=' + breadcrumbs;
+  }
+
   $('#btn-save-memo').click(function () {
     let memo = $.trim($('#from-field-image-memo').val());
     if(memo.length === 0){
@@ -399,7 +415,7 @@ $(document).ready(function () {
             if(res.err){
               layer.msg(res.msg);
             }else{
-              location.reload();
+              reloadPage();
             }
           },
           error: function(XMLHttpRequest){
@@ -430,7 +446,7 @@ $(document).ready(function () {
       // $('#image-upload-modal').modal('hide');
       // showData();
       // layer.msg('保存成功！');
-      location.reload();
+      reloadPage();
     }
     clearUploadStatus();
   });
@@ -452,7 +468,7 @@ $(document).ready(function () {
     });
 
     if(saveResult){
-      location.reload();
+      reloadPage();
       // $('#file-upload-modal').modal('hide');
       // showData();
       // layer.msg('保存成功！');
@@ -480,7 +496,7 @@ $(document).ready(function () {
       // $('#image-upload-modal').modal('hide');
       // showData();
       // layer.msg('保存成功！');
-      location.reload();
+      reloadPage();
     }
     clearUploadStatus();
   });

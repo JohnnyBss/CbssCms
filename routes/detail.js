@@ -22,8 +22,15 @@ let upload = multer({
 
 router.get('/', function(req, res, next) {
   let itemID = req.query.itemID;
+  let year = req.query.year;
+  let quarter = req.query.quarter;
   let breadcrumbs = req.query.breadcrumbs;
-  res.render('detail', { title: '考评点明细管理', itemID: itemID, breadcrumbs: breadcrumbs});
+  res.render('detail', { title: '考评点明细管理',
+    itemID: itemID,
+    year: year,
+    quarter: quarter,
+    breadcrumbs: breadcrumbs
+  });
 });
 
 router.get('/data', function (req, res, next) {
