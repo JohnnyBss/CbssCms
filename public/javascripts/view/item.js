@@ -411,9 +411,9 @@ $(document).ready(function () {
     if(!checkIsEmpty()){
       return false;
     }
-    if(!checkItemValid()){
-      return false;
-    }
+    // if(!checkItemValid()){
+    //   return false;
+    // }
     return true;
   }
 

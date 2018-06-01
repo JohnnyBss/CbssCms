@@ -16,9 +16,8 @@ let storage = multer.diskStorage({
   }
 });
 
-let upload = multer({
-  storage: storage
-});
+let upload = multer({storage: storage});
+
 
 router.get('/', function(req, res, next) {
   let itemID = req.query.itemID;
