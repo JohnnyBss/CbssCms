@@ -53,6 +53,10 @@
   width: 500px;
   margin-top: 35px;
 }
+.detail video{
+  width: 500px;
+  margin-top: 35px;
+}
 .detail p{
   width: 500px;
   margin: 35px auto 0;
@@ -73,4 +77,8 @@
 }
 .option i.icon-circle-arrow-down, i.icon-circle-arrow-up{
   color: #00be67;
+}
+.detail .part{
+  padding-top: 8px;
+  padding-bottom: 8px;
 }

@@ -12,6 +12,7 @@ $(document).ready(function () {
     setDefaultDate();
     initUploadPlugin('#file-upload-image', ['png','jpg', 'jpeg'], false);
     initUploadPlugin('#file-upload-thumbnail', ['png','jpg', 'jpeg'], false);
+    initUploadPlugin('#file-upload-video', ['webm'], true);
     showData();
   }
 
@@ -73,45 +74,72 @@ $(document).ready(function () {
     $('#modal-newsImage').modal('show');
   });
 
+  $('#btn-show-upload-video').click(function () {
+    $('#video-upload-modal').modal('show');
+  });
+
   function addNewsPart(newsContent, newsType){
     _partID++;
     let html = '';
 
-    if(newsType === 'T'){
-      html =
-          '<div class="part" data-type="T" id="part' + _partID + '">\n' +
-          '  <p>' + newsContent + '</p>\n' +
-          '  <div class="option">\n' +
-          '    <a href="javascript:" class="part-text">\n' +
-          '      <i class="icon-pencil"></i>\n' +
-          '    </a>\n' +
-          '    <a href="javascript:" class="part-remove">\n' +
-          '      <i class="icon-trash"></i>\n' +
-          '    </a>\n' +
-          '    <a href="javascript:" class="part-up">\n' +
-          '      <i class="icon-circle-arrow-up"></i>\n' +
-          '    </a>\n' +
-          '    <a href="javascript:" class="part-down">\n' +
-          '      <i class="icon-circle-arrow-down"></i>\n' +
-          '    </a>\n' +
-          '  </div>\n' +
-          '</div>';
-    }else{
-      html =
-          '<div class="part" data-type="I" id="part' + _partID + '">\n' +
-          '  <img src="' + newsContent + '" alt="">' +
-          '  <div class="option">\n' +
-          '    <a href="javascript:" class="part-remove">\n' +
-          '      <i class="icon-trash"></i>\n' +
-          '    </a>\n' +
-          '    <a href="javascript:" class="part-up">\n' +
-          '      <i class="icon-circle-arrow-up"></i>\n' +
-          '    </a>\n' +
-          '    <a href="javascript:" class="part-down">\n' +
-          '      <i class="icon-circle-arrow-down"></i>\n' +
-          '    </a>\n' +
-          '  </div>\n' +
-          '</div>';
+    switch (newsType){
+      case 'T':
+        html =
+            '<div class="part" data-type="T" id="part' + _partID + '">\n' +
+            '  <p>' + newsContent + '</p>\n' +
+            '  <div class="option">\n' +
+            '    <a href="javascript:" class="part-text">\n' +
+            '      <i class="icon-pencil"></i>\n' +
+            '    </a>\n' +
+            '    <a href="javascript:" class="part-remove">\n' +
+            '      <i class="icon-trash"></i>\n' +
+            '    </a>\n' +
+            '    <a href="javascript:" class="part-up">\n' +
+            '      <i class="icon-circle-arrow-up"></i>\n' +
+            '    </a>\n' +
+            '    <a href="javascript:" class="part-down">\n' +
+            '      <i class="icon-circle-arrow-down"></i>\n' +
+            '    </a>\n' +
+            '  </div>\n' +
+            '</div>';
+        break;
+      case 'I':
+        html =
+            '<div class="part" data-type="I" id="part' + _partID + '">\n' +
+            '  <img src="' + newsContent + '" alt="">' +
+            '  <div class="option">\n' +
+            '    <a href="javascript:" class="part-remove">\n' +
+            '      <i class="icon-trash"></i>\n' +
+            '    </a>\n' +
+            '    <a href="javascript:" class="part-up">\n' +
+            '      <i class="icon-circle-arrow-up"></i>\n' +
+            '    </a>\n' +
+            '    <a href="javascript:" class="part-down">\n' +
+            '      <i class="icon-circle-arrow-down"></i>\n' +
+            '    </a>\n' +
+            '  </div>\n' +
+            '</div>';
+        break;
+      case 'V':
+        html =
+            '<div class="part" data-type="V" id="part' + _partID + '">\n' +
+            '  <video src="' + newsContent + '" controls="controls">\n' +
+            '    您使用的浏览器不支持视频播放，请使用Chrome浏览器。' +
+            '  </video>\n' +
+
+            '  <div class="option">\n' +
+            '    <a href="javascript:" class="part-remove">\n' +
+            '      <i class="icon-trash"></i>\n' +
+            '    </a>\n' +
+            '    <a href="javascript:" class="part-up">\n' +
+            '      <i class="icon-circle-arrow-up"></i>\n' +
+            '    </a>\n' +
+            '    <a href="javascript:" class="part-down">\n' +
+            '      <i class="icon-circle-arrow-down"></i>\n' +
+            '    </a>\n' +
+            '  </div>\n' +
+            '</div>';
+        break;
     }
 
     $('.detail').append(html);
@@ -216,6 +244,17 @@ $(document).ready(function () {
     $('#modal-newsImage').modal('hide');
   });
 
+  $('#btn-save-upload-video').click(function () {
+    if(!uploadTools.isUploaded){
+      layer.msg('请先上传视频。');
+      return false;
+    }
+    let fileList = uploadTools.uploadedList;
+    addNewsPart(fileList[0], 'V');
+    uploadTools.isUploaded = false;
+    $('#video-upload-modal').modal('hide');
+  });
+
   $('#btn-upload-thumbnail').click(function () {
     $('#modal-newsThumbnail').modal('show');
   });
@@ -274,9 +313,18 @@ $(document).ready(function () {
 
     $.each(newsContentArray, function (index, content) {
       let contentType = $(content).attr('data-type');
-      let newsContent = contentType === 'T' ?
-          $(content).find('p').text():
-          $(content).find('img').attr('src');
+      let newsContent = '';
+      switch (contentType){
+        case 'T':
+          newsContent = $(content).find('p').text();
+          break;
+        case 'I':
+          newsContent = $(content).find('img').attr('src');
+          break;
+        case 'V':
+          newsContent = $(content).find('video').attr('src');
+          break;
+      }
 
       newsContentObj.push({
         newsContentType: contentType,
