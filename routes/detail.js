@@ -1,14 +1,27 @@
 let express = require('express');
+let path = require('path');
+let fs = require("fs");
 let multer = require('multer');
 let sysConfig = require('../config/sysConfig');
-let fs = require("fs");
 let router = express.Router();
 let commonService = require('../service/commonService');
+
+let createFolder = function(folder){
+  try{
+    fs.accessSync(folder);
+  }catch(e){
+    fs.mkdirSync(folder);
+  }
+};
+
+let uploadPath = path.join(path.resolve(__dirname, '..'), 'public', 'images', 'upload');
+
+createFolder(uploadPath);
 
 let storage = multer.diskStorage({
   destination: function (req, file, cb){
     //文件上传成功后会放入public下的upload文件夹
-    cb(null, './public/images/upload')
+    cb(null, uploadPath)
   },
   filename: function (req, file, cb){
     //设置文件的名字为其原本的名字，也可以添加其他字符，来区别相同文件，例如file.originalname+new Date().getTime();利用时间来区分
@@ -21,20 +34,16 @@ let upload = multer({storage: storage});
 
 router.get('/', function(req, res, next) {
   let itemID = req.query.itemID;
-  let year = req.query.year;
-  let quarter = req.query.quarter;
   let breadcrumbs = req.query.breadcrumbs;
   res.render('detail', { title: '考评点明细管理',
     itemID: itemID,
-    year: year,
-    quarter: quarter,
     breadcrumbs: breadcrumbs
   });
 });
 
 router.get('/data', function (req, res, next) {
   let service = new commonService.commonInvoke('detail4Item');
-  let parameter = '/' + sysConfig.bankID + '/' + sysConfig.branchID + '/' + req.query.itemID + '/' + req.query.year + '/' + req.query.quarter;
+  let parameter = '/' + sysConfig.bankID + '/' + sysConfig.branchID + '/' + req.query.itemID;
 
   service.get(parameter, function (result) {
     if(result.err || !result.content.result){
@@ -52,25 +61,25 @@ router.get('/data', function (req, res, next) {
   });
 });
 
-router.get('/imageMemo', function (req, res, next) {
-  let service = new commonService.commonInvoke('detail4ImageMemo');
-  let parameter = '/' + sysConfig.bankID + '/' + sysConfig.branchID + '/' + req.query.itemID + '/' + req.query.textMapDetail;
-
-  service.get(parameter, function (result) {
-    if(result.err || !result.content.result){
-      res.json({
-        err: true,
-        msg: result.msg
-      });
-    }else{
-      res.json({
-        err: !result.content.result,
-        msg: result.content.responseMessage,
-        data: result.content.responseData
-      });
-    }
-  });
-});
+// router.get('/imageMemo', function (req, res, next) {
+//   let service = new commonService.commonInvoke('detail4ImageMemo');
+//   let parameter = '/' + sysConfig.bankID + '/' + sysConfig.branchID + '/' + req.query.itemID + '/' + req.query.textMapDetail;
+//
+//   service.get(parameter, function (result) {
+//     if(result.err || !result.content.result){
+//       res.json({
+//         err: true,
+//         msg: result.msg
+//       });
+//     }else{
+//       res.json({
+//         err: !result.content.result,
+//         msg: result.content.responseMessage,
+//         data: result.content.responseData
+//       });
+//     }
+//   });
+// });
 
 router.delete('/deleteDetailImage', function (req, res, next) {
   let service = new commonService.commonInvoke('deleteDetailImage');
@@ -93,7 +102,7 @@ router.delete('/deleteDetailImage', function (req, res, next) {
 
 router.delete('/deleteOfItem', function (req, res, next) {
   let service = new commonService.commonInvoke('deleteDetailOfItem');
-  let parameter = sysConfig.bankID + '/' + sysConfig.branchID + '/' + req.query.itemID + '/' + req.query.year + '/' + req.query.quarter;
+  let parameter = sysConfig.bankID + '/' + sysConfig.branchID + '/' + req.query.itemID;
 
   service.delete(parameter, function (result) {
     if(result.err || !result.content.result){
@@ -109,7 +118,6 @@ router.delete('/deleteOfItem', function (req, res, next) {
     }
   });
 });
-
 
 router.delete('/deleteFile', function (req, res, next) {
   let fileName = req.query.fileName;
@@ -140,9 +148,9 @@ router.post('/', function (req, res, next) {
     animation: '',
     contentType: req.body.contentType,
     content: req.body.content,
-    textMapDetail: req.body.textMapDetail,
-    year: req.body.year,
-    quarter: req.body.quarter,
+    textMapDetail: 0,
+    year: 0,
+    quarter: 0,
     loginUser: req.body.loginUser
   };
 
@@ -155,7 +163,8 @@ router.post('/', function (req, res, next) {
     }else{
       res.json({
         err: !result.content.result,
-        msg: result.content.responseMessage
+        msg: result.content.responseMessage,
+        detailId: result.content.responseData
       });
     }
   });

@@ -1,6 +1,6 @@
 .detail-info{
   clear: both;
-  width: 550px;
+  /*width: 550px;*/
   margin: 35px auto 0;
 }
 .view{
@@ -19,7 +19,7 @@
 }
 
 .content-hover{
-  margin-bottom: 15px;
+  /*margin-bottom: 5px;*/
 }
 .content-hover img{
   width: 550px;
@@ -28,7 +28,7 @@
   margin-top: 15px !important;
 }
 .image-desc, .video-desc p{
-  text-align: left;
+  text-align: center;
   margin-top: 5px;
   font-family: cursive;
 }
@@ -54,4 +54,26 @@
 }
 .icon-angle-right{
   margin-right: 5px;
+}
+.tabbable ul li{
+  width: 120px;
+  text-align: center;
+}
+.content-title{
+  margin-top: 15px;
+}
+.content-title input{
+  text-align: center;
+}
+.content-list{
+  margin-top: 15px;
+}
+.draw-line-right{
+  border-right: 1px solid #CCCCCC;
+}
+.content-list .detail{
+  margin-top: 15px;
+}
+.content-text .text-option{
+  text-align: center;
 }

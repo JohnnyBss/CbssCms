@@ -25,33 +25,59 @@
   </div>
   <div class="row" id="app">
     <div class="col-xs-12">
-      <div class="option-bar">
-        <button type="button" class="btn btn-default" id="btn-back"><i class="icon-angle-left"></i>返回</button>
-        <button type="button" class="btn btn-info" id="btn-show-upload-image"><i class="icon-jfi-file-image"></i>上传图片</button>
-        <button type="button" class="btn btn-pink" id="btn-show-upload-file"><i class="icon-file"></i>上传PDF文件</button>
-        <button type="button" class="btn btn-purple" id="btn-show-upload-video"><i class="icon-facetime-video"></i>上传视频</button>
-        <button type="button" class="btn btn-success" id="btn-save"><i class="icon-save"></i>提交</button>
-        <button type="button" class="btn btn-danger" id="btn-delete"><i class="icon-trash"></i>删除</button>
-        <div class="select-time">
-          <div class="view">
-            <select id="select-year" class="johnny-select">
-              <option value="2017">2017年</option>
-              <option value="2018">2018年</option>
-            </select>
+      <div class="row option-bar">
+        <div class="col-xs-12">
+          <button type="button" class="btn btn-danger" id="btn-delete"><i class="icon-trash"></i>删除</button>
+        </div>
+      </div>
+
+      <div class="row content-list">
+        <div class="col-xs-3 draw-line-right content-text">
+          <button type="button" class="btn btn-block btn-yellow" id="btn-show-add-text"><i class="icon-jfi-comment"></i>添加文字</button>
+          <div class="detail">
+
           </div>
-          <div class="view">
-            <select id="select-quarter" class="johnny-select">
-              <option value="1">第一季度</option>
-              <option value="2">第二季度</option>
-              <option value="3">第三季度</option>
-              <option value="4">第四季度</option>
-            </select>
+        </div>
+        <div class="col-xs-3 draw-line-right content-image">
+          <button type="button" class="btn btn-block btn-info" id="btn-show-upload-image"><i class="icon-jfi-file-image"></i>上传图片</button>
+          <div class="detail">
+
+          </div>
+        </div>
+        <div class="col-xs-3 draw-line-right content-video">
+          <button type="button" class="btn btn-block btn-purple" id="btn-show-upload-video"><i class="icon-facetime-video"></i>上传视频</button>
+          <div class="detail">
+
+          </div>
+        </div>
+        <div class="col-xs-3 content-file">
+          <button type="button" class="btn btn-block btn-pink" id="btn-show-upload-file"><i class="icon-file"></i>上传PDF文件</button>
+          <div class="detail">
+
           </div>
         </div>
       </div>
 
-
-      <div class="detail-info">
+      <div class="modal fade" tabindex="-1" role="dialog" id="text-modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">编辑文字内容</h4>
+            </div>
+            <div class="alert alert-danger store-alert hidden">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <span></span>
+            </div>
+            <div class="modal-body">
+              <textarea class="form-control" rows="3" maxlength="300" placeholder="最多输入300个文字" id="from-field-text"></textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              <button type="button" class="btn btn-primary" id="btn-save-text">提交</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
       </div>
 
       <div class="modal fade" tabindex="-1" role="dialog" id="image-upload-modal">
@@ -75,6 +101,7 @@
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
       </div>
+
       <div class="modal fade" tabindex="-1" role="dialog" id="file-upload-modal">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -96,6 +123,7 @@
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
       </div>
+
       <div class="modal fade" tabindex="-1" role="dialog" id="video-upload-modal">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -117,57 +145,10 @@
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
       </div>
-
-      <div class="modal fade" tabindex="-1" role="dialog" id="image-memo-modal">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">编辑图片说明</h4>
-            </div>
-            <div class="alert alert-danger store-alert hidden">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <span></span>
-            </div>
-            <div class="modal-body">
-              <textarea class="form-control" rows="3" maxlength="300" placeholder="最多输入300个文字" id="from-field-image-memo"></textarea>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-              <button type="button" class="btn btn-primary" id="btn-save-memo">提交</button>
-            </div>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div>
-
-      <div class="modal fade" tabindex="-1" role="dialog" id="video-memo-modal">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">编辑视频说明</h4>
-            </div>
-            <div class="alert alert-danger store-alert hidden">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <span></span>
-            </div>
-            <div class="modal-body">
-              <textarea class="form-control" rows="3" maxlength="300" placeholder="最多输入300个文字" id="from-field-video-memo"></textarea>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-              <button type="button" class="btn btn-primary" id="btn-save-video-memo">提交</button>
-            </div>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div>
-
     </div>
   </div>
 </div>
 <input type="hidden" value="{{itemID}}" id="hidden-itemID">
-<input type="hidden" value="{{year}}" id="hidden-year">
-<input type="hidden" value="{{quarter}}" id="hidden-quarter">
 <input type="hidden" value="{{breadcrumbs}}" id="hidden-breadcrumbs">
 <script src="/javascripts/selectric/jquery.selectric.js"></script>
 <script src="/javascripts/fileUpload/fileUpload.js"></script>

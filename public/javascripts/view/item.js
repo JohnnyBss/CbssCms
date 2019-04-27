@@ -62,6 +62,9 @@ $(document).ready(function () {
     // $('div.treeNode[data-node-type="D"]').find('span.title').html(nodeTitleHtml);
   }
 
+  /**
+   * 给树形结构的的每个节点添加右键事件，以显示对应的快捷菜单
+   */
   function bindTreeViewEvents() {
     $('#treeView .treeNode').contextmenu(function (e) {
       let nodeType = $(this).attr('data-node-type');
@@ -72,19 +75,25 @@ $(document).ready(function () {
       rmenu.hide($(".contextmenu"));
       let addTop = -65;
       switch (nodeType) {
-        case "R":
+        case "R": // 根结点
           rmenu.show($(".right-menu-root"), e, addTop);
           break;
-        case "M":
+        case "M": //一级指标节点
           rmenu.show($(".right-menu-module"), e, addTop);
           break;
-        case "B":
+        case "B": //二级指标节点
           rmenu.show($(".right-menu-block"), e, addTop);
           break;
-        case "I":
+        case "I": // 三级指标节点
           rmenu.show($(".right-menu-item"), e, addTop);
           break;
-        case "D":
+        case "Y": // 年份节点
+          rmenu.show($(".right-menu-year"), e, addTop);
+          break;
+        case "Q": // 季度节点
+          rmenu.show($(".right-menu-quarter"), e, addTop);
+          break;
+        case "D": //详细内容节点
           rmenu.show($(".right-menu-detail"), e, addTop);
           break;
       }
@@ -200,7 +209,7 @@ $(document).ready(function () {
           layer.msg(res.msg);
         }else{
           buildTreeView();
-          $('#myModal').modal('hide');
+          $('.modal').modal('hide');
         }
       },
       error: function(XMLHttpRequest, textStatus){
@@ -226,7 +235,7 @@ $(document).ready(function () {
           layer.msg(res.msg);
         }else{
           buildTreeView();
-          $('#myModal').modal('hide');
+          $('.modal').modal('hide');
         }
       },
       error: function(XMLHttpRequest, textStatus){
@@ -241,13 +250,19 @@ $(document).ready(function () {
     if(childItemCount > 0){
       switch (_selectedNodeType) {
         case "M":
-          alertMsg = '请先删除考评模块【' + _selectedNodeName + '】下的内容。';
+          alertMsg = '请先删除一级指标【' + _selectedNodeName + '】下的内容。';
           break;
         case "B":
-          alertMsg = '请先删除考评项目【' + _selectedNodeName + '】下的内容。';
+          alertMsg = '请先删除二级指标【' + _selectedNodeName + '】下的内容。';
           break;
         case "I":
-          alertMsg = '请先删除考评点【' + _selectedNodeName + '】下的内容。';
+          alertMsg = '请先删除三级指标【' + _selectedNodeName + '】下的内容。';
+          break;
+        case "Y":
+          alertMsg = '请先删除【' + _selectedNodeName + '】下的内容。';
+          break;
+        case "Q":
+          alertMsg = '请先删除【' + _selectedNodeName + '】下的内容。';
           break;
       }
       layer.msg(alertMsg);
@@ -261,13 +276,22 @@ $(document).ready(function () {
     let confirmMsg = '';
     switch (_selectedNodeType) {
       case "M":
-        confirmMsg = '您确认要删除考评模块【' + _selectedNodeName + '】吗？';
+        confirmMsg = '您确认要删除一级指标【' + _selectedNodeName + '】吗？';
         break;
       case "B":
-        confirmMsg = '您确认要删除考评项目【' + _selectedNodeName + '】吗？';
+        confirmMsg = '您确认要删除二级指标【' + _selectedNodeName + '】吗？';
         break;
       case "I":
-        confirmMsg = '您确认要删除考评点【' + _selectedNodeName + '】吗？';
+        confirmMsg = '您确认要删除三级指标【' + _selectedNodeName + '】吗？';
+        break;
+      case "Y":
+        confirmMsg = '您确认要删除【' + _selectedNodeName + '】节点吗？';
+        break;
+      case "Q":
+        confirmMsg = '您确认要删除【' + _selectedNodeName + '】节点吗？';
+        break;
+      case "D":
+        confirmMsg = '您确认要删除【' + _selectedNodeName + '】的详细内容吗？';
         break;
     }
 
@@ -275,7 +299,7 @@ $(document).ready(function () {
       if(result) {
         _optionType = 'del';
         $.ajax({
-          url: '/item?itemID=' + _selectedNodeID,
+          url: '/item?itemID=' + _selectedNodeID + '&itemType=' + _selectedNodeType,
           type: 'delete',
           dataType: 'json',
           success: function(res){
@@ -294,70 +318,93 @@ $(document).ready(function () {
   }
 
   /**
-   * 添加模块事件
+   * 根节点快捷菜单：新增一级指标
    */
   $('.right-menu-root li.add-module').click(function () {
     setItemData('add', 0, 'M', 0);
-    setEditModal('添加模块', '模块名称', '');
+    setEditModal('添加一级指标', '指标名称', '');
     $('#myModal').modal('show');
   });
 
   /**
-   * 更新模块事件
-   */
-  $('.right-menu-module li.change-module').click(function () {
-    setItemData('upd', _selectedNodeID, 'M', 0);
-    setEditModal('修改模块', '模块名称', _selectedNodeName);
-    $('#myModal').modal('show');
-  });
-
-  /**
-   * 添加项目事件
+   * 一级指标节点快捷菜单：新增二级指标
    */
   $('.right-menu-module li.add-block').click(function () {
     setItemData('add', 0, 'B', _selectedNodeID);
-    setEditModal('添加项目', '项目名称', '');
+    setEditModal('添加二级指标', '指标名称', '');
     $('#myModal').modal('show');
   });
 
   /**
-   * 更新项目事件
+   * 一级指标节点快捷菜单：更新一级指标
    */
-  $('.right-menu-block li.change-block').click(function () {
-    setItemData('upd', _selectedNodeID, 'B', _selectedNodeParentID);
-    setEditModal('更新项目', '项目名称', _selectedNodeName);
+  $('.right-menu-module li.change-module').click(function () {
+    setItemData('upd', _selectedNodeID, 'M', 0);
+    setEditModal('修改指标', '指标名称', _selectedNodeName);
     $('#myModal').modal('show');
   });
 
   /**
-   * 添加考评点事件
+   * 二级指标节点快捷菜单：新增三级指标
    */
   $('.right-menu-block li.add-item').click(function () {
     setItemData('add', 0, 'I', _selectedNodeID);
-    setEditModal('添加考评点', '考评点', '');
+    setEditModal('添加子指标', '指标名称', '');
     $('#myModal').modal('show');
   });
 
   /**
-   * 更新考评点事件
+   * 二级指标节点快捷菜单：更新二级指标
+   */
+  $('.right-menu-block li.change-block').click(function () {
+    setItemData('upd', _selectedNodeID, 'B', _selectedNodeParentID);
+    setEditModal('更新指标', '指标名称', _selectedNodeName);
+    $('#myModal').modal('show');
+  });
+
+  /**
+   * 三级指标节点快捷菜单：新增年份
+   */
+  $('.right-menu-item li.add-year').click(function () {
+    setItemData('add', 0, 'Y', _selectedNodeID);
+    $('#yearModal').modal('show');
+  });
+
+  /**
+   * 三级指标节点快捷菜单：更新三级指标
    */
   $('.right-menu-item li.change-item').click(function () {
     setItemData('upd', _selectedNodeID, 'I', _selectedNodeParentID);
-    setEditModal('更新考评点', '考评点', _selectedNodeName);
+    setEditModal('更新指标', '指标名称', _selectedNodeName);
     $('#myModal').modal('show');
   });
 
   /**
-   * 添加子考评点事件
+   * 年份节点快捷菜单：新增季度
    */
-  $('.right-menu-item li.add-item').click(function () {
-    setItemData('add', 0, 'I', _selectedNodeID);
-    setEditModal('添加子考评点', '子考评点', '');
-    $('#myModal').modal('show');
+  $('.right-menu-year li.add-quarter').click(function () {
+    setItemData('add', 0, 'Q', _selectedNodeID);
+    $('#quarterModal').modal('show');
   });
 
   /**
-   * 删除节点（模块、项目、考评点、子考评点）事件
+   * 年份节点快捷菜单：更新当前年份
+   */
+  $('.right-menu-year li.change-year').click(function () {
+    setItemData('upd', _selectedNodeID, 'Y', _selectedNodeParentID);
+    $('#yearModal').modal('show');
+  });
+
+  /**
+   * 季度节点快捷菜单：更新当前季度
+   */
+  $('.right-menu-quarter li.change-quarter').click(function () {
+    setItemData('upd', _selectedNodeID, 'Q', _selectedNodeParentID);
+    $('#quarterModal').modal('show');
+  });
+
+  /**
+   * 所有节点公用菜单：删除当前节点（一级指标、二级指标、三级指标、当前年份、当前季度、当前内容）
    */
   $('.contextmenu li.remove-item').click(function () {
     if(!checkDelete()){
@@ -366,23 +413,23 @@ $(document).ready(function () {
     deleteItem();
   });
 
-  /**
-   * 添加考评点详细信息
-   */
-  $('.right-menu-item li.add-detail').click(function () {
-    let breadcrumbs = getBreadcrumbs4Add(_selectedNodeID, '');
-    location.href = '/detail?itemID=' + _selectedNodeID + '&breadcrumbs=' + breadcrumbs;
+  $('.right-menu-detail li.change-item').click(function () {
+    setItemData('upd', _selectedNodeID, 'D', _selectedNodeParentID);
+    setEditModal('更新标题', '标题名称', _selectedNodeName);
+    $('#myModal').modal('show');
   });
 
   /**
-   * 添加考评点详细信息
+   * 三级指标、季度、年份节点快捷菜单：新增详细标题
    */
-  // $('.right-menu-item li.search-detail').click(function () {
-  //   window.open('/detail?flag=s&itemID=' + _selectedNodeID);
-  // });
+  $('li.add-detail').click(function () {
+    setItemData('add', 0, 'D', _selectedNodeID);
+    setEditModal('添加标题', '标题名称', '');
+    $('#myModal').modal('show');
+  });
 
   /**
-   * 添加考评点详细信息
+   * 详细内容节点快捷菜单：查看详细信息
    */
   $('.right-menu-detail li.search-detail').click(function () {
     let breadcrumbs = getBreadcrumbs(_selectedNodeID, '');
@@ -391,6 +438,17 @@ $(document).ready(function () {
     window.open('/detailView?itemID=' + _selectedNodeParentID + '&year=' + year + '&quarter=' + quarter + '&breadcrumbs=' + breadcrumbs);
   });
 
+  /**
+   * 详细内容节点快捷菜单：编辑详细内容
+   */
+  $('li.edit-detail').click(function () {
+    let breadcrumbs = getBreadcrumbs4Add(_selectedNodeID, '');
+    window.open('/detail?itemID=' + _selectedNodeID + '&type=n' +  '&breadcrumbs=' + breadcrumbs);
+  });
+
+  /**
+   * 保存指标
+   */
   $('#btn-save').click(function () {
     _itemName = $.trim($('#form-field-itemName').val());
     _selectedNodeName = _itemName;
@@ -407,13 +465,40 @@ $(document).ready(function () {
     }
   });
 
+  /**
+   * 保存年份
+   */
+  $('#btn-save-year').click(function () {
+    _itemName = $('#form-select-year option:selected').text();
+    _selectedNodeName = _itemName;
+
+    if(_optionType === 'add'){
+      addNewItem();
+    }
+    if(_optionType === 'upd'){
+      changeItem();
+    }
+  });
+
+  /**
+   * 保存季度
+   */
+  $('#btn-save-quarter').click(function () {
+    _itemName = $('#form-select-quarter option:selected').text();
+    _selectedNodeName = _itemName;
+
+    if(_optionType === 'add'){
+      addNewItem();
+    }
+    if(_optionType === 'upd'){
+      changeItem();
+    }
+  });
+
   function checkData(){
     if(!checkIsEmpty()){
       return false;
     }
-    // if(!checkItemValid()){
-    //   return false;
-    // }
     return true;
   }
 
@@ -423,36 +508,6 @@ $(document).ready(function () {
       return false;
     }
     return true;
-  }
-
-  function checkItemValid(){
-    if(_itemName.length === 0){
-      return false;
-    }
-    let result = false;
-    $.ajax({
-      url: '/item/checkName?itemName=' + _itemName,
-      type: 'get',
-      async: false,
-      success: function(res){
-        if(res.err){
-          layer.msg(res.msg);
-          result = false;
-        }
-        if(res.exist){
-          layer.msg('您输入的内容已存在。');
-          result = false;
-          return false;
-        }
-        result = true;
-      },
-      error: function(XMLHttpRequest){
-        layer.msg('远程服务无响应，请检查网络设置。');
-        result = false;
-      }
-    });
-
-    return result;
   }
   
   $(document).click(function(){

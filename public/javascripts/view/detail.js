@@ -1,15 +1,10 @@
 $(document).ready(function () {
   let _itemID = $('#hidden-itemID').val();
-  let _year = $('#hidden-year').val();
-  let _quarter = $('#hidden-quarter').val();
-  let _flag = $('#hidden-flag').val();
   let _itemIdValid = true;
-  let _detailId4Memo = 0;
+
   function initPage() {
-    setDropDownList();
     setBreadcrumbs();
-    // setReadonlyStatus();
-    initUploadPlugin('#file-upload-image', ['png','jpg', 'jpeg'], true);
+    initUploadPlugin('#file-upload-image', ['png','jpg','JPG', 'jpeg'], true);
     initUploadPlugin('#file-upload-file', ['pdf'], true);
     initUploadPlugin('#file-upload-video', ['webm'], true);
     checkItemIdIsValid();
@@ -35,35 +30,12 @@ $(document).ready(function () {
 
   function checkItemIdIsValid() {
     if(_itemID === 'undefined' || _itemID === '' || isNaN(_itemID)){
-      $('#btn-show-upload-image').attr('disabled', 'disabled');
-      $('#btn-show-upload-file').attr('disabled', 'disabled');
+      $('.content-list button').attr('disabled', 'disabled');
       $('#btn-save').attr('disabled', 'disabled');
       $('#btn-delete').attr('disabled', 'disabled');
       _itemIdValid = false;
       layer.msg('参数不正确，操作被禁止。');
     }
-  }
-
-  function setDropDownList(){
-    if(_year !== ''){
-      $('#select-year').find('option[value="' + _year + '"]').attr("selected","selected");
-    }
-    if(_quarter !== ''){
-      $('#select-quarter').find('option[value="' + _quarter + '"]').attr("selected","selected");
-    }
-
-    let selectYear = $('#select-year').find('strong');
-    let selectQuarter = $('#select-quarter').find('strong');
-    // Get initial value
-    selectYear.text($('#select-year').val());
-    selectQuarter.text($('#select-quarter').val());
-    // Initialize Selectric and bind to 'change' event
-    $('#select-year').selectric().on('change', function() {
-      selectYear.text($(this).val());
-    });
-    $('#select-quarter').selectric().on('change', function() {
-      selectQuarter.text($(this).val());
-    });
   }
 
   function initUploadPlugin(selector, fileType, multiple){
@@ -82,166 +54,50 @@ $(document).ready(function () {
   }
 
   function showData(){
+    let textArray = [];
+    let imageArray = [];
+    let videoArray = [];
+    let fileArray = [];
+
     if(!_itemIdValid){
       return false;
     }
     $.ajax({
-      url: '/detail/data?itemID=' + _itemID + '&year=' + $('#select-year').val() + '&quarter=' + $('#select-quarter').val(),
+      url: '/detail/data?itemID=' + _itemID,
       type: 'get',
       success: function(res){
         if(res.err){
           layer.msg(res.msg);
           return false;
         }
-        $('.detail-info').empty();
+
         if(res.dataList.length === 0){
-          $('#btn-save').attr('disabled', 'disabled');
-          $('#btn-delete').attr('disabled', 'disabled');
+          $('#btn-delete').hide();
         }else{
-          $('#btn-save').removeAttr('disabled');
-          $('#btn-delete').removeAttr('disabled');
+          $('#btn-delete').show();
         }
+
         $.each(res.dataList, function (index, data) {
           switch (data.contentType){
+            case 'T':
+              textArray.push(data);
+              break;
             case 'I':
-              $('.detail-info').append(
-                  '<div class="content-hover port-1 effect-1" data-detail-id="' + data.detailID + '">\n' +
-                  '  <div class="image-box">\n' +
-                  '    <img src="' + data.content + '" alt="">\n' +
-                  '  </div>\n' +
-                  '  <div class="text-desc">\n' +
-                  '    <h3>操作说明</h3>\n' +
-                  '    <p>您可以对该图片添加说明文字，或者删除该图片</p>\n' +
-                  '    <a href="javascript:" class="option add-memo" data-detail-id="' + data.detailID + '">添加说明</a>\n' +
-                  '    <a href="javascript:" class="option del-image" data-detail-id="' + data.detailID + '">删除图片</a>\n' +
-                  '  </div>\n' +
-                  '  <div class="image-desc" data-detail-id="' + data.detailID + '">\n' +
-                  '    <p></p>\n' +
-                  '  </div>\n' +
-                  '</div>');
+              imageArray.push(data);
               break;
             case 'F':
-              let fileName = data.content.substr(data.content.lastIndexOf('/') + 1);
-              $('.detail-info').append(
-                  '<div class="group-file" data-detail-id="' + data.detailID + '">\n' +
-                  '  <img src="/images/icons/pdf.png" alt="">\n' +
-                  '  <a href="' + data.content + '" target="_blank">' + fileName + '</a>\n' +
-                  '  <i class="icon-trash del-file" data-detail-id="' + data.detailID + '"></i>' +
-                  '</div>');
+              fileArray.push(data);
               break;
             case 'V':
-              $('.detail-info').append(
-                  '<div class="content-hover group-video port-1 effect-1" data-detail-id="' + data.detailID + '">\n' +
-                  '  <div class="video-box">\n' +
-                  '    <video src="' + data.content + '" controls="controls">\n' +
-                  '      您使用的浏览器不支持视频播放，请使用Chrome浏览器。' +
-                  '    </video>\n' +
-                  '  </div>\n' +
-                  '  <div class="video-desc" data-detail-id = "' + data.detailID + '">\n' +
-                  '    <p></p>\n' +
-                  '  </div>\n' +
-                  '  <div class="video-option">\n' +
-                  '    <a href="javascript:" class="add-memo" data-detail-id="' + data.detailID + '">\n' +
-                  '      <i class="icon-pencil"></i>\n' +
-                  '    </a>\n' +
-                  '    <a href="javascript:" class="del-video" data-detail-id="' + data.detailID + '">\n' +
-                  '      <i class="icon-trash red"></i>\n' +
-                  '    </a>\n' +
-                  '  </div>\n' +
-                  '</div>');
+              videoArray.push(data);
               break;
           }
         });
 
-        //添加图片说明事件
-        $(".detail-info .text-desc").on("click","a.add-memo", function() {
-          _detailId4Memo = $(this).attr('data-detail-id');
-          let memo = $('div.image-desc[data-detail-id="' + _detailId4Memo + '"]').find('p').text();
-          $('#from-field-image-memo').val(memo);
-          $('#image-memo-modal').modal('show');
-        });
-
-        //删除图片事件
-        $(".detail-info .text-desc").on("click","a.del-image", function() {
-          let detailId = $(this).attr('data-detail-id');
-          let confirmMsg = '您确定要删除这张图片吗？';
-          bootbox.confirm(confirmMsg, function(result) {
-            if(result) {
-              $.ajax({
-                url: '/detail/deleteDetailImage?itemID=' + _itemID + '&detailID=' + detailId,
-                type: 'delete',
-                success: function (res) {
-                  if(res.err){
-                    layer.msg(res.msg);
-                    return false;
-                  }
-                  $('.content-hover[data-detail-id="' + detailId + '"]').remove();
-                },
-                error: function(XMLHttpRequest){
-                  layer.msg('远程服务无响应，状态码：' + XMLHttpRequest.status);
-                }
-              });
-            }
-          });
-        });
-
-        //添加视频说明事件
-        $(".detail-info .group-video").on("click","a.add-memo", function() {
-          _detailId4Memo = $(this).attr('data-detail-id');
-          let memo = $('div.group-video[data-detail-id="' + _detailId4Memo + '"]').find('p').text();
-          $('#from-field-video-memo').val(memo);
-          $('#video-memo-modal').modal('show');
-        });
-
-        //删除视频事件
-        $(".detail-info .group-video").on("click","a.del-video", function() {
-          let detailId = $(this).attr('data-detail-id');
-          let confirmMsg = '您确定要删除这个视频吗？';
-          bootbox.confirm(confirmMsg, function(result) {
-            if(result) {
-              $.ajax({
-                url: '/detail/deleteDetailImage?itemID=' + _itemID + '&detailID=' + detailId,
-                type: 'delete',
-                success: function (res) {
-                  if(res.err){
-                    layer.msg(res.msg);
-                    return false;
-                  }
-                  $('.content-hover[data-detail-id="' + detailId + '"]').remove();
-                },
-                error: function(XMLHttpRequest){
-                  layer.msg('远程服务无响应，状态码：' + XMLHttpRequest.status);
-                }
-              });
-            }
-          });
-        });
-
-        //删除文件事件
-        $(".detail-info .group-file").on("click","i.del-file", function() {
-          let detailId = $(this).attr('data-detail-id');
-          let confirmMsg = '您确定要删除这个文件吗？';
-          bootbox.confirm(confirmMsg, function(result) {
-            if(result) {
-              $.ajax({
-                url: '/detail/deleteDetailImage?itemID=' + _itemID + '&detailID=' + detailId,
-                type: 'delete',
-                success: function (res) {
-                  if(res.err){
-                    layer.msg(res.msg);
-                    return false;
-                  }
-                  $('.group-file[data-detail-id="' + detailId + '"]').remove();
-                },
-                error: function(XMLHttpRequest){
-                  layer.msg('远程服务无响应，状态码：' + XMLHttpRequest.status);
-                }
-              });
-            }
-          });
-        });
-
-        showMemo();
+        appendText(textArray);
+        appendImage(imageArray);
+        appendVideo(videoArray);
+        appendFile(fileArray);
       },
       error: function(XMLHttpRequest){
         layer.msg('远程服务无响应，状态码：' + XMLHttpRequest.status);
@@ -249,29 +105,11 @@ $(document).ready(function () {
     });
   }
 
-  function showMemo() {
-    $.each($('.content-hover'), function (index, obj) {
-      let imageID = $(obj).attr('data-detail-id');
-      $.ajax({
-        url: '/detail/imageMemo?itemID=' + _itemID + '&textMapDetail=' + imageID,
-        type: 'get',
-        success: function (res) {
-          if(res.err){
-            layer.msg(res.msg);
-            return false;
-          }
-          $(obj).find('div.image-desc').find('p').text(res.data === null ? '' : res.data.content);
-          $(obj).find('div.video-desc').find('p').text(res.data === null ? '' : res.data.content);
-        },
-        error: function(XMLHttpRequest){
-          layer.msg('远程服务无响应，状态码：' + XMLHttpRequest.status);
-        }
-      });
-    })
-  }
-
-  function saveDetailInfo(itemID, contentType, content, textMapDetail, year, quarter){
-    let saveResult = false;
+  function saveDetailInfo(itemID, contentType, content){
+    let saveRes = {
+      success: false,
+      detailId: 0
+    };
     $.ajax({
       url: '/detail',
       type: 'post',
@@ -281,16 +119,16 @@ $(document).ready(function () {
         itemID: itemID,
         contentType: contentType,
         content: content,
-        textMapDetail: textMapDetail,
-        year: year,
-        quarter: quarter,
         loginUser: getLoginUser()
       },
       success: function(res){
         if(res.err){
           layer.msg(res.msg);
         }else{
-          saveResult = true;
+          saveRes = {
+            success: true,
+            detailId: res.detailId
+          };
         }
       },
       error: function(XMLHttpRequest, textStatus){
@@ -298,124 +136,228 @@ $(document).ready(function () {
       }
     });
 
-    return saveResult;
+    return saveRes;
   }
 
   function clearUploadStatus(){
     uploadTools.isUploaded = false;
-
   }
 
-  function reloadPage(){
-    let itemID = $('#hidden-itemID').val();
-    let year = $('#select-year').val();
-    let quarter = $('#select-quarter').val();
-    let breadcrumbs = $('#hidden-breadcrumbs').val();
-    location.href = '/detail?itemID=' + itemID + '&year=' + year + '&quarter=' + quarter + '&breadcrumbs=' + breadcrumbs;
-  }
-
-  $('#btn-save-memo').click(function () {
-    let memo = $.trim($('#from-field-image-memo').val());
-    if(memo.length === 0){
-      layer.msg('请输入图片说明文字。');
-      return false;
-    }
-    let result = saveDetailInfo(_itemID, 'T', memo, _detailId4Memo, $('#select-year').val(), $('#select-quarter').val());
-    if(result){
-      $('div.image-desc[data-detail-id="' + _detailId4Memo + '"]').find('p').text(memo);
-      $('#image-memo-modal').modal('hide');
-      layer.msg('保存成功！');
-    }
-  });
-
-  $('#btn-save-video-memo').click(function () {
-    let memo = $.trim($('#from-field-video-memo').val());
-    if(memo.length === 0){
-      layer.msg('请输入视频说明文字。');
-      return false;
-    }
-    let result = saveDetailInfo(_itemID, 'T', memo, _detailId4Memo, $('#select-year').val(), $('#select-quarter').val());
-    if(result){
-      $('div.group-video[data-detail-id="' + _detailId4Memo + '"]').find('p').text(memo);
-      $('#video-memo-modal').modal('hide');
-      layer.msg('保存成功！');
-    }
-  });
-
   /**
-   * 返回事件
+   * 保存上传的文件
+   * @param fileType 文件类型
+   * @param fileList 文件列表
+   * @returns {Array} 保存成功的文件列表
    */
-  $('#btn-back').click(function () {
-    location.href = '/item'; //todo 需要传回节点编号
-  });
-
-  /**
-   * 上传图片事件
-   */
-  $('#btn-show-upload-image').click(function () {
-    $('#image-upload-modal').modal('show');
-  });
-
-  /**
-   * 上传文件事件
-   */
-  $('#btn-show-upload-file').click(function () {
-    $('#file-upload-modal').modal('show');
-  });
-
-  /**
-   * 上传视频事件
-   */
-  $('#btn-show-upload-video').click(function () {
-    $('#video-upload-modal').modal('show');
-  });
-
-  /**
-   * 保存事件
-   */
-  $('#btn-save').click(function () {
-    $.ajax({
-      url: '/item',
-      type: 'post',
-      dataType: 'json',
-      data:{
-        itemName: $('#select-year').val() + '年第' + $('#select-quarter').val() + '季度',
-        itemType: 'D',
-        parentItemID: _itemID,
-        loginUser: getLoginUser()
-      },
-      success: function(res){
-        if(res.err){
-          layer.msg(res.msg);
-        }else{
-          layer.alert('提交成功！', {icon: 6});
-          $('#btn-save').attr('disabled', 'disabled');
-        }
-      },
-      error: function(XMLHttpRequest, textStatus){
-        layer.msg('远程服务无响应，请检查网络设置。');
+  function saveUploadFileList(fileType, fileList) {
+    let result = {};
+    let successFileList = [];
+    $.each(fileList, function (index, file) {
+      result = saveDetailInfo(_itemID, fileType, file);
+      if(result.success){
+        successFileList.push({
+          detailID: result.detailId,
+          content: file
+        });
+      }else{
+        layer.msg('文件保存失败：' + file);
       }
     });
-  });
+    return successFileList;
+  }
+
+  /**
+   * 将说明文字加载到页面并动态添加删除事件
+   */
+  function appendText(textList){
+    $.each(textList, function (index, text) {
+      $('.content-text .detail').append(
+          '<div class="group-text" data-detail-id="' + text.detailID + '">\n' +
+          '  <div class="text-desc" data-detail-id = "' + text.detailID + '">\n' +
+          '    <p style="margin-top: 10px">' + text.content + '</p>\n' +
+          '  </div>\n' +
+          '  <div class="text-option">\n' +
+          '    <a href="javascript:" class="del-text" data-detail-id="' + text.detailID + '">\n' +
+          '      <i class="icon-trash red"></i>\n' +
+          '    </a>\n' +
+          '  </div>\n' +
+          '</div>');
+
+      //删除文本内容事件
+      $('.content-text .detail .group-text[data-detail-id=' + text.detailID + ']').on('click','a.del-text', function() {
+        let detailId = $(this).attr('data-detail-id');
+        let confirmMsg = '您确定要删除这部分内容吗？';
+        bootbox.confirm(confirmMsg, function(result) {
+          if(result) {
+            $.ajax({
+              url: '/detail/deleteDetailImage?itemID=' + _itemID + '&detailID=' + detailId,
+              type: 'delete',
+              success: function (res) {
+                if(res.err){
+                  layer.msg(res.msg);
+                  return false;
+                }
+                $('.group-text[data-detail-id="' + detailId + '"]').remove();
+              },
+              error: function(XMLHttpRequest){
+                layer.msg('远程服务无响应，状态码：' + XMLHttpRequest.status);
+              }
+            });
+          }
+        });
+      });
+    });
+  }
+
+  /**
+   * 将图片加载到页面并动态添加删除事件
+   * @param fileList 已上传的图片列表
+   */
+  function appendImage(fileList){
+    $.each(fileList, function (index, file) {
+      $('.content-image .detail').append(
+          '<div class="content-hover port-1 effect-1" data-detail-id="' + file.detailID + '">\n' +
+          '  <div class="image-box">\n' +
+          '    <img src="' + file.content + '" alt="">\n' +
+          '  </div>\n' +
+          '  <div class="text-desc" data-detail-id="' + file.detailID + '">\n' +
+          '    <a href="javascript:" class="option del-image" data-detail-id="' + file.detailID + '">删除图片</a>\n' +
+          '  </div>\n' +
+          '  <div class="image-desc" data-detail-id="' + file.detailID + '">\n' +
+          '    <p>' + file.content.substr(file.content.lastIndexOf('/')+1) + '</p>\n' +
+          '  </div>\n' +
+          '</div>');
+
+      //删除图片事件
+      $('.content-image .detail .text-desc[data-detail-id=' + file.detailID + ']').on('click','a.del-image', function() {
+        let detailId = $(this).attr('data-detail-id');
+        let confirmMsg = '您确定要删除这张图片吗？';
+        bootbox.confirm(confirmMsg, function(result) {
+          if(result) {
+            $.ajax({
+              url: '/detail/deleteDetailImage?itemID=' + _itemID + '&detailID=' + detailId,
+              type: 'delete',
+              success: function (res) {
+                if(res.err){
+                  layer.msg(res.msg);
+                  return false;
+                }
+                $('.content-hover[data-detail-id="' + detailId + '"]').remove();
+              },
+              error: function(XMLHttpRequest){
+                layer.msg('远程服务无响应，状态码：' + XMLHttpRequest.status);
+              }
+            });
+          }
+        });
+      });
+    });
+  }
+
+  /**
+   * 将视频加载到页面并动态添加删除事件
+   * @param fileList 已上传的视频列表
+   */
+  function appendVideo(fileList){
+    $.each(fileList, function (index, file) {
+      $('.content-video .detail').append(
+          '<div class="content-hover group-video port-1 effect-1" data-detail-id="' + file.detailID + '">\n' +
+          '  <div class="video-box">\n' +
+          '    <video src="' + file.content + '" controls="controls" style="width: 100%">\n' +
+          '      您使用的浏览器不支持视频播放，请使用Chrome浏览器。' +
+          '    </video>\n' +
+          '  </div>\n' +
+          '  <div class="video-desc" data-detail-id = "' + file.detailID + '">\n' +
+          '    <p>' + file.content.substr(file.content.lastIndexOf('/')+1) + '</p>\n' +
+          '  </div>\n' +
+          '  <div class="video-option">\n' +
+          '    <a href="javascript:" class="del-video" data-detail-id="' + file.detailID + '">\n' +
+          '      <i class="icon-trash red"></i>\n' +
+          '    </a>\n' +
+          '  </div>\n' +
+          '</div>');
+
+      //删除视频事件
+      $('.content-video .detail .group-video[data-detail-id=' + file.detailID + ']').on('click','a.del-video', function() {
+        let detailId = $(this).attr('data-detail-id');
+        let confirmMsg = '您确定要删除这个视频吗？';
+        bootbox.confirm(confirmMsg, function(result) {
+          if(result) {
+            $.ajax({
+              url: '/detail/deleteDetailImage?itemID=' + _itemID + '&detailID=' + detailId,
+              type: 'delete',
+              success: function (res) {
+                if(res.err){
+                  layer.msg(res.msg);
+                  return false;
+                }
+                $('.content-hover[data-detail-id="' + detailId + '"]').remove();
+              },
+              error: function(XMLHttpRequest){
+                layer.msg('远程服务无响应，状态码：' + XMLHttpRequest.status);
+              }
+            });
+          }
+        });
+      });
+    });
+  }
+
+  /**
+   * 将文件加载到页面并动态添加删除事件
+   * @param fileList 已上传的文件列表
+   */
+  function appendFile(fileList){
+    $.each(fileList, function (index, file) {
+      $('.content-file .detail').append(
+          '<div class="group-file" data-detail-id="' + file.detailID + '">\n' +
+          '  <img src="/images/icons/pdf.png" alt="">\n' +
+          '  <a href="' + file.content + '" target="_blank">' + file.content.substr(file.content.lastIndexOf('/')+1) + '</a>\n' +
+          '  <i class="icon-trash del-file" data-detail-id="' + file.detailID + '"></i>' +
+          '</div>');
+
+      //删除文件事件
+      $('.content-file .detail .group-file[data-detail-id='+ file.detailID + ']').on('click','i.del-file', function() {
+        let detailId = $(this).attr('data-detail-id');
+        let confirmMsg = '您确定要删除这个文件吗？';
+        bootbox.confirm(confirmMsg, function(result) {
+          if(result) {
+            $.ajax({
+              url: '/detail/deleteDetailImage?itemID=' + _itemID + '&detailID=' + detailId,
+              type: 'delete',
+              success: function (res) {
+                if(res.err){
+                  layer.msg(res.msg);
+                  return false;
+                }
+                $('.group-file[data-detail-id="' + detailId + '"]').remove();
+              },
+              error: function(XMLHttpRequest){
+                layer.msg('远程服务无响应，状态码：' + XMLHttpRequest.status);
+              }
+            });
+          }
+        });
+      });
+    });
+  }
 
   /**
    * 删除事件
    */
   $('#btn-delete').click(function () {
-    let year = $('#select-year').val();
-    let quarter = $('#select-quarter').val();
-    let confirmMsg = '您确定要删当前考评点' + year + '年第' + quarter + '季度的详细数据吗？';
+    let confirmMsg = '您确定要删当前内容吗？';
     bootbox.confirm(confirmMsg, function(result) {
       if(result) {
         $.ajax({
-          url: 'detail/deleteOfItem?itemID=' + _itemID + '&year=' + year + '&quarter=' + quarter,
+          url: 'detail/deleteOfItem?itemID=' + _itemID,
           type: 'delete',
           dataType: 'json',
           success: function(res){
             if(res.err){
               layer.msg(res.msg);
             }else{
-              reloadPage();
+              location.reload();
             }
           },
           error: function(XMLHttpRequest){
@@ -427,6 +369,42 @@ $(document).ready(function () {
   });
 
   /**
+   * 淡出添加文字的对话框
+   */
+  $('#btn-show-add-text').click(function () {
+    $('#text-modal').modal('show');
+  });
+
+  /**
+   * 将文字信息保存到数据库
+   */
+  $('#btn-save-text').click(function () {
+    let text = $.trim($('#from-field-text').val());
+    if(text.length === 0){
+      layer.msg('请输入文字内容。');
+      return false;
+    }
+    let textList = [];
+    let result = saveDetailInfo(_itemID, 'T', text);
+    if(!result.success){
+      layer.msg('保存文字信息失败。');
+      return false;
+    }
+
+    textList.push({detailID: result.detailId, content: text});
+    appendText(textList);
+    $('#text-modal').modal('hide');
+    $('#from-field-text').val('');
+  });
+
+  /**
+   * 弹出上传图片的对话框
+   */
+  $('#btn-show-upload-image').click(function () {
+    $('#image-upload-modal').modal('show');
+  });
+
+  /**
    * 将上传的图片地址保存到数据库
    */
   $('#btn-save-upload-images').click(function () {
@@ -435,45 +413,17 @@ $(document).ready(function () {
       return false;
     }
 
-    let fileList = uploadTools.uploadedList;
-    let saveResult = false;
-
-    $.each(fileList, function (index, file) {
-      saveResult = saveDetailInfo(_itemID, 'I', file, 0, $('#select-year').val(), $('#select-quarter').val());
-    });
-
-    if(saveResult){
-      // $('#image-upload-modal').modal('hide');
-      // showData();
-      // layer.msg('保存成功！');
-      reloadPage();
-    }
+    let fileList = saveUploadFileList('I', uploadTools.uploadedList);
+    appendImage(fileList);
+    $('#image-upload-modal').modal('hide');
     clearUploadStatus();
   });
 
   /**
-   * 将上传的PDF地址保存到数据库
+   * 弹出上传文件的对话框
    */
-  $('#btn-save-upload-files').click(function () {
-    if(!uploadTools.isUploaded){
-      layer.msg('请先上传PDF文件。');
-      return false;
-    }
-
-    let fileList = uploadTools.uploadedList;
-    let saveResult = false;
-
-    $.each(fileList, function (index, file) {
-      saveResult = saveDetailInfo(_itemID, 'F', file, 0, $('#select-year').val(), $('#select-quarter').val());
-    });
-
-    if(saveResult){
-      reloadPage();
-      // $('#file-upload-modal').modal('hide');
-      // showData();
-      // layer.msg('保存成功！');
-    }
-    //clearUploadStatus();
+  $('#btn-show-upload-file').click(function () {
+    $('#file-upload-modal').modal('show');
   });
 
   /**
@@ -484,26 +434,31 @@ $(document).ready(function () {
       layer.msg('请先上传视频。');
       return false;
     }
-
-    let fileList = uploadTools.uploadedList;
-    let saveResult = false;
-
-    $.each(fileList, function (index, file) {
-      saveResult = saveDetailInfo(_itemID, 'V', file, 0, $('#select-year').val(), $('#select-quarter').val());
-    });
-
-    if(saveResult){
-      // $('#image-upload-modal').modal('hide');
-      // showData();
-      // layer.msg('保存成功！');
-      reloadPage();
-    }
+    let fileList = saveUploadFileList('V', uploadTools.uploadedList);
+    appendVideo(fileList);
+    $('#video-upload-modal').modal('hide');
     clearUploadStatus();
   });
 
+  /**
+   * 弹出上传视频的对话框
+   */
+  $('#btn-show-upload-video').click(function () {
+    $('#video-upload-modal').modal('show');
+  });
 
-  $('.johnny-select').change(function () {
-    showData();
+  /**
+   * 将上传的PDF地址保存到数据库
+   */
+  $('#btn-save-upload-files').click(function () {
+    if(!uploadTools.isUploaded){
+      layer.msg('请先上传PDF文件。');
+      return false;
+    }
+    let fileList = saveUploadFileList('F', uploadTools.uploadedList);
+    appendFile(fileList);
+    $('#file-upload-modal').modal('hide');
+    clearUploadStatus();
   });
 
   initPage();

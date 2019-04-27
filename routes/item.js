@@ -128,8 +128,10 @@ router.put('/', function (req, res, next) {
 router.delete('/', function (req, res, next) {
   let service = new commonService.commonInvoke('item');
   let itemID = req.query.itemID;
+  let itemType = req.query.itemType;
+  let parameter = '/' + sysConfig.bankID + '/' + sysConfig.branchID + '/' + itemID + '/' + itemType;
 
-  service.delete(itemID, function (result) {
+  service.delete(parameter, function (result) {
     if(result.err){
       res.json({
         err: true,
