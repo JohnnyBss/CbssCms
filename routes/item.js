@@ -125,6 +125,33 @@ router.put('/', function (req, res, next) {
   });
 });
 
+router.put('/move', function (req, res, next) {
+  let service = new commonService.commonInvoke('moveItem');
+  let data = {
+    itemID: req.body.itemID,
+    bankID: sysConfig.bankID,
+    branchID: sysConfig.branchID,
+    itemName: req.body.itemName,
+    itemType: req.body.itemType,
+    parentItemID: req.body.parentItemID,
+    loginUser: req.body.loginUser
+  };
+
+  service.change(data, function (result) {
+    if(result.err){
+      res.json({
+        err: true,
+        msg: result.msg
+      });
+    }else{
+      res.json({
+        err: !result.content.result,
+        msg: result.content.responseMessage
+      });
+    }
+  });
+});
+
 router.delete('/', function (req, res, next) {
   let service = new commonService.commonInvoke('item');
   let itemID = req.query.itemID;

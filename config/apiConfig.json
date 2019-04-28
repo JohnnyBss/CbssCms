@@ -9,6 +9,7 @@
       "blockExist": "/api/block/exist",
       "blockOfModule": "/api/block/module",
       "item": "/api/item",
+      "moveItem": "/api/item/move",
       "itemExist": "/api/item/exist",
       "itemOfBlock": "/api/item/block",
       "detail": "/api/detail",

@@ -1,7 +1,7 @@
-function Jtree(treeData){
+function Jtree(treeData, treeID){
   var fileData = treeData.files;
   this.build = function(){
-    var treeView = tools.$('#treeView');
+    var treeView = tools.$(treeID);
     // 初始化
     treeView.innerHTML = treeHtml(fileData, -1);
 

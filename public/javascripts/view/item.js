@@ -9,6 +9,13 @@ $(document).ready(function () {
   let _selectedNodeParentID = '0';
   let _selectedNodeType = 'R';
 
+  let _moveOutNodeID = 0;
+  let _moveOutNodeName = '';
+  let _moveOutNodeType = '';
+  let _moveInNodeID = 0;
+  let _moveInNodeName = '';
+  let _moveInNodeType = '';
+
   function initPage() {
     buildTreeView();
   }
@@ -41,7 +48,7 @@ $(document).ready(function () {
             "type": item.itemType
           })
         });
-        let jtree = new Jtree(data);
+        let jtree = new Jtree(data, '#treeView');
         jtree.build();
         bindTreeViewEvents();
         setOpenNodes();
@@ -57,9 +64,6 @@ $(document).ready(function () {
     let detailNode = $('div.treeNode[data-node-type="D"]');
     $(detailNode).find('i.icon-file').remove();
     $(detailNode).find('i.icon-control').after('<i class="icon-file-text" style="color: #90d900; font-size: 16px; margin-right: 8px; position: relative; top: 6px"></i>');
-    // let nodeTitleHtml = '<i class="icon-file-text" style="color: #90d900; font-size: 16px; margin-right: 8px"></i>' + nodeTitle;
-    // $('div.treeNode[data-node-type="D"]').find('i.icon-file').remove();
-    // $('div.treeNode[data-node-type="D"]').find('span.title').html(nodeTitleHtml);
   }
 
   /**
@@ -132,7 +136,6 @@ $(document).ready(function () {
       $('div.treeNode[data-file-id="' + _selectedNodeID + '"]').addClass('treeNode-cur');
       _selectedNodeName = $('div.treeNode[data-file-id="' + _selectedNodeID + '"]').find('span.title').text();
     }
-
   }
   
   function getBreadcrumbs(nodeID, breadcrumbs) {
@@ -174,10 +177,10 @@ $(document).ready(function () {
   }
 
   function openChildTreeNode(nodeID) {
-        if($('div.treeNode[data-file-id="' + nodeID + '"]').next('ul').find('li').length > 0){
-          $('div.treeNode[data-file-id="' + nodeID + '"]').find('i.icon-control').removeClass('icon-add').addClass('icon-minus icon-folder-open');
-          $('div.treeNode[data-file-id="' + nodeID + '"]').next('ul').removeClass('none');
-        }
+    if($('div.treeNode[data-file-id="' + nodeID + '"]').next('ul').find('li').length > 0){
+      $('div.treeNode[data-file-id="' + nodeID + '"]').find('i.icon-control').removeClass('icon-add').addClass('icon-minus icon-folder-open');
+      $('div.treeNode[data-file-id="' + nodeID + '"]').next('ul').removeClass('none');
+    }
   }
 
   function setEditModal(title, formLabel, itemName, treeMap){
@@ -445,6 +448,114 @@ $(document).ready(function () {
     let breadcrumbs = getBreadcrumbs4Add(_selectedNodeID, '');
     window.open('/detail?itemID=' + _selectedNodeID + '&type=n' +  '&breadcrumbs=' + breadcrumbs);
   });
+
+  /**
+   * 公用快捷菜单：移出
+   */
+  $('li.move-out').click(function () {
+    _moveOutNodeID = _selectedNodeID;
+    _moveOutNodeName = _selectedNodeName;
+    _moveOutNodeType = _selectedNodeType;
+    // layer.alert('已选定要移出的节点：' + _moveOutNodeName + '，请继续选择要移入的节点', {
+    //   icon: 1,
+    //   skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+    // });
+
+    //layer.msg('已选定要移出的节点：' + _moveOutNodeName + '，请继续选择要移入的节点');
+  });
+
+  /**
+   * 公用快捷菜单：移入
+   */
+  $('li.move-in').click(function () {
+    _moveInNodeID = _selectedNodeID;
+    _moveInNodeName = _selectedNodeName;
+    _moveInNodeType = _selectedNodeType;
+
+    if(!checkMove()){
+      return false;
+    }
+    moveNode();
+  });
+
+  /**
+   * 判断是否可以移动内容
+   * @returns {boolean} 判断结果
+   */
+  function checkMove(){
+    if(_moveOutNodeID === 0){
+      layer.msg('请先选择要移出的内容。');
+      return false;
+    }
+    switch (_moveOutNodeType) {
+      case 'B': //移出二级指标下的所有内容
+          if(_moveInNodeType !== 'M'){
+            layer.msg('二级指标只能移动到某个一级指标下。');
+            return false;
+          }
+        break;
+      case 'I': //移出三级指标下的所有内容
+        if(_moveInNodeType !== 'B'){
+          layer.msg('三级指标只能移动到某个二级指标下。');
+          return false;
+        }
+        break;
+      case 'Y': //移出当前年下的所有内容
+        if(_moveInNodeType !== 'I'){
+          layer.msg('年份只能移动到某个三级指标下。');
+          return false;
+        }
+        break;
+      case 'Q': //移出当前季度下的所有内容
+        if(_moveInNodeType !== 'Y'){
+          layer.msg('季度只能移动到某个年份下。');
+          return false;
+        }
+        break;
+      case 'D': //移出当前内容
+        if(!(_moveInNodeType === 'Q' || _moveInNodeType === 'Y' || _moveInNodeType === 'I')){
+          layer.msg('详细内容只能移动到某个季度、年份或者三级指标下。');
+          return false;
+        }
+        break;
+    }
+
+    return true;
+  }
+
+  /**
+   * 移动内容节点
+   */
+  function moveNode(){
+    $.ajax({
+      url: '/item/move',
+      type: 'put',
+      dataType: 'json',
+      data:{
+        itemID: _moveOutNodeID,
+        itemName: _moveOutNodeName,
+        itemType: _moveOutNodeType,
+        parentItemID: _moveInNodeID,
+        loginUser: getLoginUser()
+      },
+      success: function(res){
+        if(res.err){
+          layer.msg(res.msg);
+        }else{
+          buildTreeView();
+        }
+      },
+      error: function(XMLHttpRequest, textStatus){
+        layer.msg('远程服务无响应，请检查网络设置。');
+      }
+    });
+    _moveOutNodeID = 0;
+    _moveOutNodeName = '';
+    _moveOutNodeType = '';
+    _moveInNodeID = 0;
+    _moveInNodeName = '';
+    _moveInNodeType = '';
+  }
 
   /**
    * 保存指标
