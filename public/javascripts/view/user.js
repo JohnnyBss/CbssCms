@@ -4,6 +4,8 @@ var app = new Vue({
     userID: '',
     userName: '',
     cellphone: '',
+    selectedRole: 0,
+    roles:[{value: 0, text: '管理员'},{value: 1, text: '普通职员'},{value: 2, text: '理财经理'},{value: 3, text: '大堂经理'}],
     originalCellphone: '',
     cellphoneValid: false,
     saveType: ''
@@ -83,6 +85,7 @@ var app = new Vue({
         data = {
           userName: this.userName,
           cellphone: this.cellphone,
+          userRole: this.selectedRole,
           loginUser: getLoginUser()
         }
       }else {
@@ -91,6 +94,7 @@ var app = new Vue({
           userID: this.userID,
           userName: this.userName,
           cellphone: this.cellphone,
+          userRole: this.selectedRole,
           loginUser: getLoginUser()
         }
       }

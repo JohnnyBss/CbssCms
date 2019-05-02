@@ -17,6 +17,8 @@ const sysName = require('./routes/sysName');
 const news = require('./routes/news');
 const editNews = require('./routes/editNews');
 const user = require('./routes/user');
+const advertise = require('./routes/advertise');
+const advertiseDetail = require('./routes/advertiseDetail');
 let app = express();
 
 // view engine setup
@@ -52,6 +54,8 @@ app.use('/logo', logo);
 app.use('/news', news);
 app.use('/editNews', editNews);
 app.use('/user', user);
+app.use('/advertise', advertise);
+app.use('/advertiseDetail', advertiseDetail);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

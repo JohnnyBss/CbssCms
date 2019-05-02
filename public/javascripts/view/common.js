@@ -20,6 +20,10 @@ function setActiveNav() {
     pathname = '/news';
   }
 
+  if(pathname.indexOf('advertise') >= 0){
+    pathname = '/advertise';
+  }
+
   if((pathname.indexOf('item') >= 0 && pathname.indexOf('itemBatch') === -1)
       || pathname.indexOf('detail') >= 0
       || pathname.indexOf('detailView') >= 0){

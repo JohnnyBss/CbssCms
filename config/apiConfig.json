@@ -3,6 +3,7 @@
     "host": "localhost",
     "port": 8080,
     "path": {
+      "advertise": "/api/advertise",
       "module": "/api/module",
       "moduleExist": "/api/module/exist",
       "block": "/api/block",

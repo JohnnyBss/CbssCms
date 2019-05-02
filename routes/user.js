@@ -42,6 +42,7 @@ router.post('/', function (req, res, next) {
     bankID: sysConfig.bankID,
     branchID: sysConfig.branchID,
     userName: req.body.userName,
+    userRole: req.body.userRole,
     cellphone: req.body.cellphone,
     password: '111111',
     loginUser: req.body.loginUser
@@ -69,6 +70,7 @@ router.put('/', function (req, res, next) {
     branchID: sysConfig.branchID,
     userID: req.body.userID,
     userName: req.body.userName,
+    userRole: req.body.userRole,
     cellphone: req.body.cellphone,
     loginUser: req.body.loginUser
   };
