@@ -1,0 +1,100 @@
+<div class="breadcrumbs" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="icon-home home-icon"></i>
+      <a href="/index">主页</a>
+    </li>
+    <li>
+      <a href="#">理财业务分流管理</a>
+    </li>
+    <li class="active">理财业务分流</li>
+  </ul>
+</div>
+
+<div class="page-content">
+  <div class="page-header">
+    <h1>
+      理财业务分流管理
+      <small>
+        <i class="icon-double-angle-right"></i>
+        理财业务分流
+      </small>
+    </h1>
+  </div>
+
+  <div class="row" id="app">
+    <div class="col-xs-12">
+      <div class="space-6"></div>
+      <div class="table-header">
+        找到{{totalCount}}条数据
+      </div>
+      <div class="table-responsive">
+        <table id="data-list" class="table table-striped table-bordered table-hover no-margin-bottom">
+          <thead>
+          <tr>
+            <th class="center">
+              业务编号
+            </th>
+            <th>发起人</th>
+            <th>发起时间</th>
+            <th>承接人</th>
+            <th>回复时间</th>
+            <th>当前状态</th>
+            <th>完成时间</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each dataList}}
+            <tr>
+              <td class="center">{{this.businessID}}</td>
+              <td>{{this.sendUserName}}({{this.sendUserRoleText}})</td>
+              <td>{{this.sendTime}}</td>
+              <td>{{this.receiveUserName}}({{this.receiveUserRoleText}})</td>
+              <td>{{this.receiveTime}}</td>
+              <td>{{this.businessStatusText}}</td>
+              <td>{{this.completeTime}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+
+      {{#if paginationArray}}
+        <div class="modal-footer no-margin-top">
+          <ul class="pagination pull-right no-margin">
+            <li class="prev">
+              {{#if prePageNum}}
+                <a href="/distribute?pageNumber={{prePageNum}}">
+                  <i class="icon-double-angle-left"></i>
+                </a>
+              {{else}}
+                <span>
+              <i class="icon-double-angle-left"></i>
+            </span>
+              {{/if}}
+            </li>
+            {{#each paginationArray}}
+              <li>
+                <a href="/distribute?pageNumber={{this}}">{{this}}</a>
+              </li>
+            {{/each}}
+            <li class="next">
+              {{#if nextPageNum}}
+                <a href="/distribute?pageNumber={{nextPageNum}}">
+                  <i class="icon-double-angle-right"></i>
+                </a>
+              {{else}}
+                <span>
+              <i class="icon-double-angle-right"></i>
+            </span>
+              {{/if}}
+            </li>
+          </ul>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+</div>
+
+<input type="hidden" value="{{currentPageNum}}" id="hidden-currentPageNum">
+<!--<script src="/javascripts/view/user.js"></script>-->

@@ -16,6 +16,26 @@ router.get('/', function(req, res, next) {
   });
 });
 
+router.get('/data', function(req, res, next) {
+  let service = new commonService.commonInvoke('user');
+  let userID = req.query.userID;
+
+  service.get(userID, function (result) {
+    if(result.err){
+      res.json({
+        err: true,
+        msg: result.msg
+      });
+    }else{
+      res.json({
+        err: !result.content.result,
+        msg: result.content.responseMessage,
+        data: result.content.responseData
+      });
+    }
+  });
+});
+
 router.get('/cellphone', function(req, res, next) {
   let service = new commonService.commonInvoke('userCellphone');
   let cellphone = req.query.cellphone;
@@ -43,6 +63,7 @@ router.post('/', function (req, res, next) {
     branchID: sysConfig.branchID,
     userName: req.body.userName,
     userRole: req.body.userRole,
+    userPhoto: req.body.userPhoto,
     cellphone: req.body.cellphone,
     password: '111111',
     loginUser: req.body.loginUser
@@ -71,6 +92,7 @@ router.put('/', function (req, res, next) {
     userID: req.body.userID,
     userName: req.body.userName,
     userRole: req.body.userRole,
+    userPhoto: req.body.userPhoto,
     cellphone: req.body.cellphone,
     loginUser: req.body.loginUser
   };

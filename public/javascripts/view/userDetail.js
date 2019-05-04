@@ -1,14 +1,16 @@
 var app = new Vue({
   el: '#app',
   data: {
-    userID: '',
+    option: $('#hidden_option').val(),
+    userID: $('#hidden_userID').val(),
     userName: '',
     cellphone: '',
+    photoUrl: 'images/user_photo_default.jpeg',
     selectedRole: 0,
     roles:[{value: 0, text: '管理员'},{value: 1, text: '普通职员'},{value: 2, text: '理财经理'},{value: 3, text: '大堂经理'}],
     originalCellphone: '',
     cellphoneValid: false,
-    saveType: ''
+    saveType: $('#hidden_option').val()
   },
   computed: {
     enabledSave: function () {
@@ -18,6 +20,45 @@ var app = new Vue({
     }
   },
   methods: {
+    initPage: function(){
+      this.loadUserInfo();
+      this.initUploadPlugin('#file-upload-image', ['png','jpg','JPG', 'jpeg'], false);
+    },
+    initUploadPlugin: function(selector, fileType, multiple){
+      $(selector).initUpload({
+        "uploadUrl":"/userDetail/fileUpload",//上传文件信息地址
+        //"deleteFileUrl":"/advertiseDetail/deleteFile?fileName=",//上传文件信息地址
+        "ismultiple": multiple,
+        "fileType": fileType,//文件类型限制，默认不限制，注意写的是文件后缀
+        "maxFileNumber": 10,//文件个数限制，为整数\
+      });
+    },
+    loadUserInfo: function(){
+      if(this.option !== 'upd'){
+        return false;
+      }
+      $.ajax({
+        url: '/user/data?userID=' + this.userID,
+        type: 'GET',
+        success: function(res){
+          if(res.err){
+            layer.msg(res.msg);
+            return false;
+          }
+          if(res.data === null){
+            layer.msg('该用户不存在或已删除。');
+            return false;
+          }
+          app.$data.userName = res.data.userName;
+          app.$data.cellphone = res.data.cellphone;
+          app.$data.selectedRole = res.data.userRole === null ? 0 : res.data.userRole;
+          app.$data.photoUrl = res.data.userPhoto === '' ? 'images/user_photo_default.jpeg' : res.data.userPhoto;
+        },
+        error: function(XMLHttpRequest, textStatus){
+          layer.msg('远程服务无响应，请检查网络设置。');
+        }
+      });
+    },
     onCellphoneBlur: function () {
       if(this.cellphone.length === 0 || this.cellphone === this.originalCellphone){
         return false;
@@ -42,20 +83,36 @@ var app = new Vue({
         }
       });
     },
-    onAdd: function(){
-      // this.saveType = 'add';
-      // $('#myModal').modal('show');
-      location.href = '/userDetail?option=add';
+    checkData: function(){
+      if(this.saveType !== 'add' && this.saveType !== 'upd'){
+        layer.msg('参数不正确。');
+        return false;
+      }
+      if(this.userName.length === 0){
+        layer.msg('请输入员工姓名。');
+        return false;
+      }
+      if(this.cellphone.length === 0){
+        layer.msg('请输入员工手机号码。');
+        return false;
+      }
+      if(this.photoUrl === 'images/user_photo_default.jpeg'){
+        layer.msg('请上传员工头像。');
+        return false;
+      }
+      return true;
     },
-    onChange: function(userID){
-      location.href = '/userDetail?option=upd&userID=' + userID;
-      // this.saveType = 'upd';
-      // let row = $('#data-list tbody tr').eq(rowIndex);
-      // this.userID = $(row).find('td').eq(0).text();
-      // this.userName = $(row).find('td').eq(1).text();
-      // this.cellphone = $(row).find('td').eq(2).text();
-      // this.originalCellphone = $(row).find('td').eq(2).text();
-      // $('#myModal').modal('show');
+    onShowUploadDialog: function(){
+      $('#photo-upload-modal').modal('show');
+    },
+    onLoadImage: function(){
+      if(!uploadTools.isUploaded){
+        layer.msg('请先上传照片。');
+        return false;
+      }
+      this.photoUrl = uploadTools.uploadedList[0];
+      $('#photo-upload-modal').modal('hide');
+      uploadTools.isUploaded = false;
     },
     onDelete: function (userID, userName) {
       let confirmMsg = '您确定要删除用户【' + userName + '】吗？';
@@ -80,6 +137,9 @@ var app = new Vue({
       });
     },
     onSave: function () {
+      if(!this.checkData()){
+        return false;
+      }
       let type = '';
       let data = {};
       if(this.saveType === 'add'){
@@ -88,6 +148,7 @@ var app = new Vue({
           userName: this.userName,
           cellphone: this.cellphone,
           userRole: this.selectedRole,
+          userPhoto: this.photoUrl,
           loginUser: getLoginUser()
         }
       }else {
@@ -97,6 +158,7 @@ var app = new Vue({
           userName: this.userName,
           cellphone: this.cellphone,
           userRole: this.selectedRole,
+          userPhoto: this.photoUrl,
           loginUser: getLoginUser()
         }
       }
@@ -109,7 +171,7 @@ var app = new Vue({
           if(res.err){
             layer.msg(res.msg);
           }else{
-            location.reload();
+            location.href = '/user';
           }
         },
         error: function(XMLHttpRequest, textStatus){
@@ -117,5 +179,8 @@ var app = new Vue({
         }
       });
     }
+  },
+  mounted: function () {
+    this.initPage();
   }
 });

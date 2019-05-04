@@ -24,6 +24,10 @@ function setActiveNav() {
     pathname = '/advertise';
   }
 
+  if(pathname.indexOf('user') >= 0){
+    pathname = '/user';
+  }
+
   if((pathname.indexOf('item') >= 0 && pathname.indexOf('itemBatch') === -1)
       || pathname.indexOf('detail') >= 0
       || pathname.indexOf('detailView') >= 0){

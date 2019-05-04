@@ -26,7 +26,8 @@
       "login": "/api/user/login",
       "sysName": "/api/systemName",
       "logo": "/api/logo",
-      "logo4Branch": "/api/logo/branch"
+      "logo4Branch": "/api/logo/branch",
+      "distribute": "/api/business"
     }
   }
 }

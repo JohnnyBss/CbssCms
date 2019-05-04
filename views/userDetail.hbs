@@ -1,0 +1,107 @@
+<link rel="stylesheet" href="/stylesheets/fileUpload/iconfont.css" />
+<link rel="stylesheet" href="/stylesheets/fileUpload/fileUpload.css">
+
+<div class="breadcrumbs" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="icon-home home-icon"></i>
+      <a href="/index">主页</a>
+    </li>
+    <li>
+      <a href="#">营业网点信息管理</a>
+    </li>
+    <li class="active">员工账户编辑</li>
+  </ul>
+</div>
+
+<div class="page-content">
+  <div class="page-header">
+    <h1>
+      营业网点信息管理
+      <small>
+        <i class="icon-double-angle-right"></i>
+        员工账户编辑
+      </small>
+    </h1>
+  </div>
+  <div class="row" id="app">
+    <div class="col-md-12">
+      <div class="row option-bar">
+        <div class="col-xs-12">
+          <a href="/user" class="btn btn-default" id="btn-back"><i class="icon-reply"></i>返回</a>
+          <button type="button" class="btn btn-primary" id="btn-save" @click="onSave"><i class="icon-save"></i>提交</button>
+          <button type="button" class="btn btn-danger" id="btn-delete" style="display: none;"><i class="icon-trash"></i>删除</button>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top: 15px">
+        <div class="col-md-2">
+          <div class="user-photo">
+            <img :src="photoUrl" alt="">
+            <button type="button" class="btn btn-purple btn-block" style="margin-top: 15px" @click="onShowUploadDialog">上传</button>
+          </div>
+
+        </div>
+        <div class="col-md-10">
+          <form class="form-horizontal">
+            <div class="form-group" v-if="saveType === 'upd'">
+              <label for="inputEmail3" class="col-sm-1 control-label">员工编号</label>
+              <div class="col-sm-10">
+                <p class="form-control-static">\{{userID}}</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail3" class="col-sm-1 control-label">员工姓名</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" maxlength="15" id="form-field-userName" v-model="userName">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail3" class="col-sm-1 control-label">手机号码</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" maxlength="11" id="form-field-cellphone" v-model="cellphone">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail3" class="col-sm-1 control-label">员工岗位</label>
+              <div class="col-sm-6">
+                <select v-model="selectedRole" class="form-control">
+                  <option v-for="role in roles" :value="role.value">
+                    \{{ role.text }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="modal fade" tabindex="-1" role="dialog" id="photo-upload-modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">上传图片（*.jpg, *.jpeg, *.png）请上传1:1尺寸的图片</h4>
+            </div>
+            <div class="alert alert-danger store-alert hidden">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <span></span>
+            </div>
+            <div class="modal-body">
+              <div id="file-upload-image" class="fileUploadContent"></div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              <button type="button" class="btn btn-primary" id="btn-save-upload-images" @click="onLoadImage">保存</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<input type="hidden" value="{{option}}" id="hidden_option">
+<input type="hidden" value="{{userID}}" id="hidden_userID">
+<script src="/javascripts/fileUpload/fileUpload.js"></script>
+<script src="/javascripts/view/userDetail.js"></script>

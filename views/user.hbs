@@ -7,7 +7,7 @@
     <li>
       <a href="#">营业网点信息管理</a>
     </li>
-    <li class="active">账户管理</li>
+    <li class="active">员工账户管理</li>
   </ul>
 </div>
 
@@ -39,6 +39,7 @@
             <th class="center">
               员工编号
             </th>
+            <th>照片</th>
             <th>员工姓名</th>
             <th>手机号码</th>
             <th>员工角色</th>
@@ -59,16 +60,20 @@
           {{#each dataList}}
             <tr>
               <td class="center">{{this.userID}}</td>
+              <td>
+                <img src="{{this.userPhoto}}" class="img-responsive" style="width: 60px">
+
+              </td>
               <td>{{this.userName}}</td>
               <td>{{this.cellphone}}</td>
-              <td>{{this.userRole}}</td>
+              <td>{{this.userRoleText}}</td>
               <td>{{this.inUser}}</td>
               <td>{{this.inDate}}</td>
               <td>{{this.lastEditUser}}</td>
               <td>{{this.lastEditDate}}</td>
               <td>
                 <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
-                  <a class="green" href="#" @click="onChange({{@index}})">
+                  <a class="green" href="#" @click="onChange({{this.userID}})">
                     <i class="icon-pencil bigger-130"></i>
                   </a>
                   <a class="red" href="#" @click="onDelete('{{this.userID}}', '{{this.userName}}')">

@@ -27,7 +27,10 @@ var app = new Vue({
           if(res.userInfo === null) {
             layer.msg('用户名密码不存在。');
             return false;
-          } else {
+          } else if(res.userInfo.userRole !== '0') {
+            layer.msg('您不是系统管理员，请使用系统管理员账号登陆。');
+            return false;
+          }else{
             setCookie('loginUser', JSON.stringify(res.userInfo));
             location.href = '/index';
           }
