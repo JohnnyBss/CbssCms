@@ -1,24 +1,14 @@
 let express = require('express');
-let multer = require('multer');
+let path = require('path');
 let fs = require("fs");
+let multer = require('multer');
+let uploadUtils = require('../common/uploadUtils');
 let sysConfig = require('../config/sysConfig');
 let commonService = require('../service/commonService');
 let router = express.Router();
 
-let storage = multer.diskStorage({
-  destination: function (req, file, cb){
-    //文件上传成功后会放入public下的upload文件夹
-    cb(null, './public/images/upload')
-  },
-  filename: function (req, file, cb){
-    //设置文件的名字为其原本的名字，也可以添加其他字符，来区别相同文件，例如file.originalname+new Date().getTime();利用时间来区分
-    cb(null, file.originalname)
-  }
-});
 
-let upload = multer({
-  storage: storage
-});
+let upload = uploadUtils.createUploadObject(['public','images','news']);
 
 router.get('/', function(req, res, next) {
   let newsID = req.query.newsID;
@@ -125,7 +115,7 @@ router.put('/', function (req, res, next) {
 router.post('/fileUpload',  upload.array('file', 10), function(req,res,next){
   let uploadImageUrlArray = [];
   req.files.forEach(function (file, index) {
-    uploadImageUrlArray.push('http://' + req.headers.host + '/images/upload/' + file.originalname)
+    uploadImageUrlArray.push('http://' + req.headers.host + '/images/news/' + file.originalname)
   });
   //将其发回客户端
   res.json({
