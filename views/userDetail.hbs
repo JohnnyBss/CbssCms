@@ -29,6 +29,7 @@
       <div class="row option-bar">
         <div class="col-xs-12">
           <a href="/user" class="btn btn-default" id="btn-back"><i class="icon-reply"></i>返回</a>
+          <button type="button" class="btn btn-info" id="btn-show-resume-upload-modal" @click="onShowUploadResume"><i class="icon-picture"></i>上传履历</button>
           <button type="button" class="btn btn-primary" id="btn-save" @click="onSave"><i class="icon-save"></i>提交</button>
           <button type="button" class="btn btn-danger" id="btn-delete" style="display: none;"><i class="icon-trash"></i>删除</button>
         </div>
@@ -38,32 +39,32 @@
         <div class="col-md-2">
           <div class="user-photo">
             <img :src="photoUrl" alt="">
-            <button type="button" class="btn btn-purple btn-block" style="margin-top: 15px" @click="onShowUploadDialog">上传</button>
+            <button type="button" class="btn btn-purple btn-block" style="margin-top: 15px" @click="onShowUploadDialog">上传头像</button>
           </div>
 
         </div>
         <div class="col-md-10">
           <form class="form-horizontal">
             <div class="form-group" v-if="saveType === 'upd'">
-              <label for="inputEmail3" class="col-sm-1 control-label">员工编号</label>
+              <label for="inputEmail3" class="col-sm-2 control-label">员工编号</label>
               <div class="col-sm-10">
                 <p class="form-control-static">\{{userID}}</p>
               </div>
             </div>
             <div class="form-group">
-              <label for="inputEmail3" class="col-sm-1 control-label">员工姓名</label>
+              <label for="inputEmail3" class="col-sm-2 control-label">员工姓名</label>
               <div class="col-sm-6">
                 <input type="text" class="form-control" maxlength="15" id="form-field-userName" v-model="userName">
               </div>
             </div>
             <div class="form-group">
-              <label for="inputEmail3" class="col-sm-1 control-label">手机号码</label>
+              <label for="inputEmail3" class="col-sm-2 control-label">手机号码</label>
               <div class="col-sm-6">
                 <input type="text" class="form-control" maxlength="11" id="form-field-cellphone" v-model="cellphone">
               </div>
             </div>
             <div class="form-group">
-              <label for="inputEmail3" class="col-sm-1 control-label">员工岗位</label>
+              <label for="inputEmail3" class="col-sm-2 control-label">员工岗位</label>
               <div class="col-sm-6">
                 <select v-model="selectedRole" class="form-control">
                   <option v-for="role in roles" :value="role.value">
@@ -72,6 +73,13 @@
                 </select>
               </div>
             </div>
+            <div class="form-group">
+              <label for="inputEmail3" class="col-sm-2 control-label">员工简介</label>
+              <div class="col-sm-6">
+                <img :src="resumeUrl" alt="">
+              </div>
+            </div>
+
           </form>
         </div>
       </div>
@@ -97,6 +105,29 @@
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
       </div>
+
+      <div class="modal fade" tabindex="-1" role="dialog" id="resume-upload-modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">上传图片（*.jpg, *.jpeg, *.png）486*650尺寸的图片</h4>
+            </div>
+            <div class="alert alert-danger store-alert hidden">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <span></span>
+            </div>
+            <div class="modal-body">
+              <div id="file-upload-resume" class="fileUploadContent"></div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              <button type="button" class="btn btn-primary" id="btn-save-upload-resume" @click="onLoadResume">保存</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div>
+
     </div>
   </div>
 </div>

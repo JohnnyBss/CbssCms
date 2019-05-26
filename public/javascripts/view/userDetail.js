@@ -6,6 +6,7 @@ var app = new Vue({
     userName: '',
     cellphone: '',
     photoUrl: 'images/user_photo_default.jpeg',
+    resumeUrl: '',
     selectedRole: 0,
     roles:[{value: 0, text: '管理员'},{value: 1, text: '普通职员'},{value: 2, text: '理财经理'},{value: 3, text: '大堂经理'}],
     originalCellphone: '',
@@ -22,11 +23,12 @@ var app = new Vue({
   methods: {
     initPage: function(){
       this.loadUserInfo();
-      this.initUploadPlugin('#file-upload-image', ['png','jpg','JPG', 'jpeg'], false);
+      this.initUploadPlugin('#file-upload-image', ['png','jpg','JPG', 'jpeg'], '/userDetail/photoUpload', false);
+      this.initUploadPlugin('#file-upload-resume', ['png','jpg','JPG', 'jpeg'], '/userDetail/resumeUpload', false);
     },
-    initUploadPlugin: function(selector, fileType, multiple){
+    initUploadPlugin: function(selector, fileType, uploadPath, multiple){
       $(selector).initUpload({
-        "uploadUrl":"/userDetail/fileUpload",//上传文件信息地址
+        "uploadUrl": uploadPath,//上传文件信息地址
         //"deleteFileUrl":"/advertiseDetail/deleteFile?fileName=",//上传文件信息地址
         "ismultiple": multiple,
         "fileType": fileType,//文件类型限制，默认不限制，注意写的是文件后缀
@@ -53,6 +55,7 @@ var app = new Vue({
           app.$data.cellphone = res.data.cellphone;
           app.$data.selectedRole = res.data.userRole === null ? 0 : res.data.userRole;
           app.$data.photoUrl = res.data.userPhoto === '' ? 'images/user_photo_default.jpeg' : res.data.userPhoto;
+          app.$data.resumeUrl = res.data.userResume;
         },
         error: function(XMLHttpRequest, textStatus){
           layer.msg('远程服务无响应，请检查网络设置。');
@@ -100,10 +103,17 @@ var app = new Vue({
         layer.msg('请上传员工头像。');
         return false;
       }
+      if(this.resumeUrl === ''){
+        layer.msg('请上传员工履历。');
+        return false;
+      }
       return true;
     },
     onShowUploadDialog: function(){
       $('#photo-upload-modal').modal('show');
+    },
+    onShowUploadResume: function(){
+      $('#resume-upload-modal').modal('show');
     },
     onLoadImage: function(){
       if(!uploadTools.isUploaded){
@@ -112,6 +122,15 @@ var app = new Vue({
       }
       this.photoUrl = uploadTools.uploadedList[0];
       $('#photo-upload-modal').modal('hide');
+      uploadTools.isUploaded = false;
+    },
+    onLoadResume: function(){
+      if(!uploadTools.isUploaded){
+        layer.msg('请先上传员工履历。');
+        return false;
+      }
+      this.resumeUrl = uploadTools.uploadedList[0];
+      $('#resume-upload-modal').modal('hide');
       uploadTools.isUploaded = false;
     },
     onDelete: function (userID, userName) {
@@ -149,6 +168,7 @@ var app = new Vue({
           cellphone: this.cellphone,
           userRole: this.selectedRole,
           userPhoto: this.photoUrl,
+          userResume: this.resumeUrl,
           loginUser: getLoginUser()
         }
       }else {
@@ -159,6 +179,7 @@ var app = new Vue({
           cellphone: this.cellphone,
           userRole: this.selectedRole,
           userPhoto: this.photoUrl,
+          userResume: this.resumeUrl,
           loginUser: getLoginUser()
         }
       }

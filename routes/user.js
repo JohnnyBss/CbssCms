@@ -64,6 +64,7 @@ router.post('/', function (req, res, next) {
     userName: req.body.userName,
     userRole: req.body.userRole,
     userPhoto: req.body.userPhoto,
+    userResume: req.body.userResume,
     cellphone: req.body.cellphone,
     password: '111111',
     loginUser: req.body.loginUser
@@ -93,6 +94,7 @@ router.put('/', function (req, res, next) {
     userName: req.body.userName,
     userRole: req.body.userRole,
     userPhoto: req.body.userPhoto,
+    userResume: req.body.userResume,
     cellphone: req.body.cellphone,
     loginUser: req.body.loginUser
   };
