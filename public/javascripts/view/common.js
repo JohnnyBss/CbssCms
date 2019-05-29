@@ -156,7 +156,7 @@ function getLoginUserInfo() {
     return JSON.parse(cookie);
   }
 
-  return 'unknown';
+  return '';
 }
 
 function getLoginUser() {

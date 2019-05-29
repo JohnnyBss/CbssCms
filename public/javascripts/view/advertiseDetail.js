@@ -17,7 +17,7 @@ $(document).ready(function () {
     setPageStatus();
     initUploadPlugin('#file-upload-image', ['png','jpg','JPG', 'jpeg'], true);
     initUploadPlugin('#file-upload-file', ['mp3'], true);
-    initUploadPlugin('#file-upload-video', ['webm'], true);
+    initUploadPlugin('#file-upload-video', ['mp4', 'webm'], true);
     showData();
   }
 

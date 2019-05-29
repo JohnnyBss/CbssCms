@@ -8,7 +8,13 @@ var app = new Vue({
     photoUrl: 'images/user_photo_default.jpeg',
     resumeUrl: '',
     selectedRole: 0,
-    roles:[{value: 0, text: '管理员'},{value: 1, text: '普通职员'},{value: 2, text: '理财经理'},{value: 3, text: '大堂经理'}],
+    roles:[
+      {value: 0, text: '管理员'},
+      {value: 1, text: '普通职员'},
+      {value: 2, text: '理财经理'},
+      {value: 3, text: '大堂经理'},
+      {value: 4, text: '营运主管'}
+    ],
     originalCellphone: '',
     cellphoneValid: false,
     saveType: $('#hidden_option').val()

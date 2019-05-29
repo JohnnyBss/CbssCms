@@ -6,7 +6,7 @@ $(document).ready(function () {
     setBreadcrumbs();
     initUploadPlugin('#file-upload-image', ['png','jpg','JPG', 'jpeg'], true);
     initUploadPlugin('#file-upload-file', ['pdf'], true);
-    initUploadPlugin('#file-upload-video', ['webm'], true);
+    initUploadPlugin('#file-upload-video', ['mp4', 'webm'], true);
     checkItemIdIsValid();
     showData();
   }
