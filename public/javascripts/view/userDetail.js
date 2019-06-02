@@ -59,6 +59,7 @@ var app = new Vue({
           }
           app.$data.userName = res.data.userName;
           app.$data.cellphone = res.data.cellphone;
+          app.$data.originalCellphone = res.data.cellphone;
           app.$data.selectedRole = res.data.userRole === null ? 0 : res.data.userRole;
           app.$data.photoUrl = res.data.userPhoto === '' ? 'images/user_photo_default.jpeg' : res.data.userPhoto;
           app.$data.resumeUrl = res.data.userResume;
