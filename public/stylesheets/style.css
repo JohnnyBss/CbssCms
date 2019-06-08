@@ -55,3 +55,9 @@ body{
 .margin-top-15{
   margin-top: 15px;
 }
+.btn-analyse{
+  width: 100px;
+  height: 34px;
+  padding: 0;
+  border-radius: 5px;
+}

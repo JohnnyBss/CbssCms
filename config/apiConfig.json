@@ -27,7 +27,9 @@
       "sysName": "/api/systemName",
       "logo": "/api/logo",
       "logo4Branch": "/api/logo/branch",
-      "distribute": "/api/business"
+      "distribute": "/api/business",
+      "analyse4financial": "/api/analyse/financial",
+      "analyse4lobby": "/api/analyse/lobby"
     }
   }
 }

@@ -1,0 +1,176 @@
+<div class="breadcrumbs" id="breadcrumbs">
+  <ul class="breadcrumb">
+    <li>
+      <i class="icon-home home-icon"></i>
+      <a href="/index">主页</a>
+    </li>
+    <li>
+      <a href="#">理财业务分流管理</a>
+    </li>
+    <li class="active">业务分析</li>
+  </ul>
+</div>
+
+<div class="page-content">
+  <div class="page-header">
+    <h1>
+      理财业务分流管理
+      <small>
+        <i class="icon-double-angle-right"></i>
+        业务分析
+      </small>
+    </h1>
+  </div>
+
+  <div class="space-6"></div>
+  <div class="row" id="app">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12">
+          <form class="form-inline">
+            <div class="form-group">
+              <label for="exampleInputEmail2">起始时间</label>
+              <input type="date" class="form-control" v-model="fromDate" placeholder="起始时间">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail2">截止时间</label>
+              <input type="date" class="form-control" v-model="toDate" placeholder="截止时间">
+            </div>
+            <button type="button" class="btn btn-primary btn-analyse" :disabled="!enabledSave" @click="onAnalyse">
+              <span class="glyphicon glyphicon-stats"></span>
+              分析
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="space-6"></div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="table-header">
+            理财经理业务数据分析
+          </div>
+          <div class="table-responsive">
+            <table id="data-list" class="table table-striped table-bordered table-hover no-margin-bottom">
+              <thead>
+              <tr>
+                <th class="center">理财经理</th>
+                <th>业务量</th>
+                <th>空闲</th>
+                <th>繁忙</th>
+                <th>离开</th>
+                <th>离岗</th>
+              </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(data, index)  in financialAnalyseData" :class="{ warning: currentSelectedFinancialIndex === index }" @click="onRefreshFinancialCallback(index)">
+                  <td class="center">\{{data.financialName}}</td>
+                  <td class="align-right">\{{data.orderCount}}</td>
+                  <td>
+                    <span v-if="data.freeTime !== null && data.freeTime.day !== 0">\{{data.freeTime.day}}天</span>
+                    <span v-if="data.freeTime !== null && data.freeTime.hour !== 0">\{{data.freeTime.hour}}小时</span>
+                    <span v-if="data.freeTime !== null && data.freeTime.min !== 0">\{{data.freeTime.min}}分</span>
+                    <span v-if="data.freeTime !== null && data.freeTime.seconds !== 0">\{{data.freeTime.seconds}}秒</span>
+                  </td>
+                  <td>
+                    <span v-if="data.busyTime !== null && data.busyTime.day !== 0">\{{data.busyTime.day}}天</span>
+                    <span v-if="data.busyTime !== null && data.busyTime.hour !== 0">\{{data.busyTime.hour}}小时</span>
+                    <span v-if="data.busyTime !== null && data.busyTime.min !== 0">\{{data.busyTime.min}}分</span>
+                    <span v-if="data.busyTime !== null && data.busyTime.seconds !== 0">\{{data.busyTime.seconds}}秒</span>
+                  </td>
+                  <td>
+                    <span v-if="data.leaveTime !== null && data.leaveTime.day !== 0">\{{data.leaveTime.day}}天</span>
+                    <span v-if="data.leaveTime !== null && data.leaveTime.hour !== 0">\{{data.leaveTime.hour}}小时</span>
+                    <span v-if="data.leaveTime !== null && data.leaveTime.min !== 0">\{{data.leaveTime.min}}分</span>
+                    <span v-if="data.leaveTime !== null && data.leaveTime.seconds !== 0">\{{data.leaveTime.seconds}}秒</span>
+                  </td>
+                  <td>
+                    <span v-if="data.offDutyTime !== null && data.offDutyTime.day !== 0">\{{data.offDutyTime.day}}天</span>
+                    <span v-if="data.offDutyTime !== null && data.offDutyTime.hour !== 0">\{{data.offDutyTime.hour}}小时</span>
+                    <span v-if="data.offDutyTime !== null && data.offDutyTime.min !== 0">\{{data.offDutyTime.min}}分</span>
+                    <span v-if="data.offDutyTime !== null && data.offDutyTime.seconds !== 0">\{{data.offDutyTime.seconds}}秒</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="table-header">
+            理财经理回呼数据分析
+          </div>
+          <div class="table-responsive">
+            <table id="data-list" class="table table-striped table-bordered table-hover no-margin-bottom">
+              <thead>
+              <tr>
+                <th>回呼内容</th>
+                <th>总量</th>
+              </tr>
+              </thead>
+              <tbody>
+                <tr v-for="data in currentFinancialCallbackAnalyseData">
+                  <td>\{{data.callBackMessage}}</td>
+                  <td class="align-right">\{{data.totalCount}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="space-6"></div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="table-header">
+            大堂经理业务数据分析
+          </div>
+          <div class="table-responsive">
+            <table id="data-list" class="table table-striped table-bordered table-hover no-margin-bottom">
+              <thead>
+              <tr>
+                <th class="center">大堂经理</th>
+                <th>发送量</th>
+                <th>回呼处理量</th>
+                <th>离岗</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="(data, index)  in lobbyAnalyseData" :class="{ warning: currentSelectedLobbyIndex === index }" @click="onRefreshLobbyCallback(index)">
+                <td class="center">\{{data.lobbyName}}</td>
+                <td class="align-right">\{{data.sendTotalCount}}</td>
+                <td class="align-right">\{{data.callbackTotalCount}}</td>
+                <td>
+                  <span v-if="data.offDutyTime !== null && data.offDutyTime.day !== 0">\{{data.offDutyTime.day}}天</span>
+                  <span v-if="data.offDutyTime !== null && data.offDutyTime.hour !== 0">\{{data.offDutyTime.hour}}小时</span>
+                  <span v-if="data.offDutyTime !== null && data.offDutyTime.min !== 0">\{{data.offDutyTime.min}}分</span>
+                  <span v-if="data.offDutyTime !== null && data.offDutyTime.seconds !== 0">\{{data.offDutyTime.seconds}}秒</span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="table-header">
+            大堂经理回呼数据分析
+          </div>
+          <div class="table-responsive">
+            <table id="data-list" class="table table-striped table-bordered table-hover no-margin-bottom">
+              <thead>
+              <tr>
+                <th>回呼内容</th>
+                <th>总量</th>
+              </tr>
+              </thead>
+              <tbody>
+                <tr v-for="data in currentLobbyCallbackAnalyseData">
+                  <td>\{{data.callBackMessage}}</td>
+                  <td class="align-right">\{{data.totalCount}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/javascripts/view/analyse.js"></script>

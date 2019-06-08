@@ -22,6 +22,7 @@ const changePassword = require('./routes/changePassword');
 const advertise = require('./routes/advertise');
 const advertiseDetail = require('./routes/advertiseDetail');
 const distribute = require('./routes/distribute');
+const analyse = require('./routes/analyse');
 let app = express();
 
 // view engine setup
@@ -62,6 +63,7 @@ app.use('/changePassword', changePassword);
 app.use('/advertise', advertise);
 app.use('/advertiseDetail', advertiseDetail);
 app.use('/distribute', distribute);
+app.use('/analyse', analyse);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
