@@ -29,7 +29,8 @@
       "logo4Branch": "/api/logo/branch",
       "distribute": "/api/business",
       "analyse4financial": "/api/analyse/financial",
-      "analyse4lobby": "/api/analyse/lobby"
+      "analyse4lobby": "/api/analyse/lobby",
+      "changeNodeOrder": "/api/item/changeNodeOrder"
     }
   }
 }

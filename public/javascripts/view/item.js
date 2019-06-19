@@ -456,12 +456,6 @@ $(document).ready(function () {
     _moveOutNodeID = _selectedNodeID;
     _moveOutNodeName = _selectedNodeName;
     _moveOutNodeType = _selectedNodeType;
-    // layer.alert('已选定要移出的节点：' + _moveOutNodeName + '，请继续选择要移入的节点', {
-    //   icon: 1,
-    //   skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-    // });
-
-    //layer.msg('已选定要移出的节点：' + _moveOutNodeName + '，请继续选择要移入的节点');
   });
 
   /**
@@ -477,6 +471,113 @@ $(document).ready(function () {
     }
     moveNode();
   });
+
+  $('li.move-up').click(function () {
+    _moveInNodeID = _selectedNodeID;
+    _moveInNodeName = _selectedNodeName;
+    _moveInNodeType = _selectedNodeType;
+
+    if(!checkMoveUp()){
+      return false;
+    }
+    moveUp();
+  });
+
+  $('li.move-down').click(function () {
+    _moveInNodeID = _selectedNodeID;
+    _moveInNodeName = _selectedNodeName;
+    _moveInNodeType = _selectedNodeType;
+
+    if(!checkMoveDown()){
+      return false;
+    }
+    moveDown();
+  });
+  
+  function checkMoveUp() {
+    let currentNode = $('#treeView').find('div[data-file-id="'+  _moveInNodeID + '"]').parent();
+    let preNode = $(currentNode).prev();
+    if(preNode.length === 0){
+      layer.msg('该内容已经在最前面对了啦！');
+      return false;
+    }
+    return true;
+  }
+
+  function checkMoveDown() {
+    let currentNode = $('#treeView').find('div[data-file-id="'+  _moveInNodeID + '"]').parent();
+    let nextNode = $(currentNode).next();
+    if(nextNode.length === 0){
+      layer.msg('该内容已经在最后面对了啦！');
+      return false;
+    }
+    return true;
+  }
+  
+  function moveUp() {
+    let currentRootNode = $('#treeView').find('div[data-file-id="'+  _moveInNodeID + '"]').parent().parent();
+    let childrenList = $(currentRootNode).children('li');
+    let nodeIdList = [];
+    let currentIdIndex = -1;
+    let preNodeIdIndex = -1;
+
+    $.each(childrenList, function (index, children) {
+      if($(children).find('div.treeNode').attr('data-file-id') == _moveInNodeID){
+        currentIdIndex = index;
+        preNodeIdIndex = index - 1;
+      }
+      nodeIdList.push($(children).find('div.treeNode').attr('data-file-id'));
+    });
+
+    let temp = nodeIdList[currentIdIndex];
+    nodeIdList[currentIdIndex] = nodeIdList[preNodeIdIndex];
+    nodeIdList[preNodeIdIndex] = temp;
+    changeNodeOrder(_selectedNodeParentID, nodeIdList);
+  }
+  
+  function moveDown() {
+    let currentRootNode = $('#treeView').find('div[data-file-id="'+  _moveInNodeID + '"]').parent().parent();
+    let childrenList = $(currentRootNode).children('li');
+    let nodeIdList = [];
+    let currentIdIndex = -1;
+    let nextNodeIdIndex = -1;
+
+    $.each(childrenList, function (index, children) {
+      if($(children).find('div.treeNode').attr('data-file-id') == _moveInNodeID){
+        currentIdIndex = index;
+        nextNodeIdIndex = index + 1;
+      }
+      nodeIdList.push($(children).find('div.treeNode').attr('data-file-id'));
+    });
+
+    let temp = nodeIdList[currentIdIndex];
+    nodeIdList[currentIdIndex] = nodeIdList[nextNodeIdIndex];
+    nodeIdList[nextNodeIdIndex] = temp;
+    changeNodeOrder(_selectedNodeParentID, nodeIdList);
+  }
+
+  function changeNodeOrder(parentNodeID, childNodeOrder) {
+    $.ajax({
+      url: '/item/changeNodeOrder',
+      type: 'put',
+      dataType: 'json',
+      data:{
+        parentItemID: parentNodeID,
+        childNodeOrder: childNodeOrder.toString(),
+        loginUser: getLoginUser()
+      },
+      success: function(res){
+        if(res.err){
+          layer.msg(res.msg);
+        }else{
+          buildTreeView();
+        }
+      },
+      error: function(XMLHttpRequest, textStatus){
+        layer.msg('远程服务无响应，请检查网络设置。');
+      }
+    });
+  }
 
   /**
    * 判断是否可以移动内容

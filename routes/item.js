@@ -152,6 +152,31 @@ router.put('/move', function (req, res, next) {
   });
 });
 
+router.put('/changeNodeOrder', function (req, res, next) {
+  let service = new commonService.commonInvoke('changeNodeOrder');
+  let data = {
+    bankID: sysConfig.bankID,
+    branchID: sysConfig.branchID,
+    parentItemID: req.body.parentItemID,
+    itemsOrder: req.body.childNodeOrder,
+    loginUser: req.body.loginUser
+  };
+
+  service.change(data, function (result) {
+    if(result.err){
+      res.json({
+        err: true,
+        msg: result.msg
+      });
+    }else{
+      res.json({
+        err: !result.content.result,
+        msg: result.content.responseMessage
+      });
+    }
+  });
+});
+
 router.delete('/', function (req, res, next) {
   let service = new commonService.commonInvoke('item');
   let itemID = req.query.itemID;
