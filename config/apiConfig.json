@@ -15,6 +15,7 @@
       "itemOfBlock": "/api/item/block",
       "detail": "/api/detail",
       "detail4Item": "/api/detail/item",
+      "reverseSequence": "/api/detail/reverseSequence",
       "detail4ImageMemo": "/api/detail/imageMemo",
       "deleteDetailImage": "/api/detail/deleteImage",
       "deleteDetailOfItem": "/api/detail/deleteOfItem",

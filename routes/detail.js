@@ -73,26 +73,6 @@ router.get('/data', function (req, res, next) {
   });
 });
 
-// router.get('/imageMemo', function (req, res, next) {
-//   let service = new commonService.commonInvoke('detail4ImageMemo');
-//   let parameter = '/' + sysConfig.bankID + '/' + sysConfig.branchID + '/' + req.query.itemID + '/' + req.query.textMapDetail;
-//
-//   service.get(parameter, function (result) {
-//     if(result.err || !result.content.result){
-//       res.json({
-//         err: true,
-//         msg: result.msg
-//       });
-//     }else{
-//       res.json({
-//         err: !result.content.result,
-//         msg: result.content.responseMessage,
-//         data: result.content.responseData
-//       });
-//     }
-//   });
-// });
-
 router.delete('/deleteDetailImage', function (req, res, next) {
   let service = new commonService.commonInvoke('deleteDetailImage');
   let parameter = '/' + sysConfig.bankID + '/' + sysConfig.branchID + '/' + req.query.itemID + '/' + req.query.detailID;
@@ -156,7 +136,7 @@ router.post('/', function (req, res, next) {
     bankID: sysConfig.bankID,
     branchID: sysConfig.branchID,
     itemID: req.body.itemID,
-    sequence: 0,
+    sequence: req.body.sequence,
     animation: '',
     contentType: req.body.contentType,
     content: req.body.content,
@@ -180,6 +160,29 @@ router.post('/', function (req, res, next) {
       });
     }
   });
+});
+
+router.put('/reverseSequence', function (req, res, next) {
+    let service = new commonService.commonInvoke('reverseSequence');
+    let data = {
+        firstDetailID: req.body.firstDetailID,
+        secondDetailID: req.body.secondDetailID,
+        loginUser: req.body.loginUser
+    };
+
+    service.change(data, function (result) {
+        if(result.err){
+            res.json({
+                err: true,
+                msg: result.msg
+            });
+        }else{
+            res.json({
+                err: !result.content.result,
+                msg: result.content.responseMessage
+            });
+        }
+    });
 });
 
 module.exports = router;

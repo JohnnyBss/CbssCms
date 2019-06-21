@@ -30,23 +30,25 @@
 .image-desc, .video-desc p{
   text-align: center;
   margin-top: 5px;
+  margin-bottom: 5px !important;
   font-family: cursive;
 }
-/*.image-desc, video-desc p{*/
-  /*text-align: left;*/
-  /*font-family: cursive;*/
-/*}*/
 
 .group-file{
-  width: 550px;
+  /*width: 550px;*/
   margin: 15px auto;
 }
 .group-file img{
   width: 30px;
 }
 .del-file{
-  margin-left: 15px;
+  margin-left: 5px;
   color: red;
+  cursor: pointer;
+}
+.change-position{
+  margin-left: 5px !important;
+  color: #0e55e6;
   cursor: pointer;
 }
 .icon-double-angle-right{
@@ -87,7 +89,5 @@
   height: 55px;
   font-size: 25px;
   text-align: center;
-  /*color: #1a1a1a;*/
   border: none;
-  /*border-bottom: 1px solid #CCCCCC;*/
 }

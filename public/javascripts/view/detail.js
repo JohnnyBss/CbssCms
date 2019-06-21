@@ -105,7 +105,7 @@ $(document).ready(function () {
     });
   }
 
-  function saveDetailInfo(itemID, contentType, content){
+  function saveDetailInfo(itemID, contentType, content, sequence){
     let saveRes = {
       success: false,
       detailId: 0
@@ -117,6 +117,7 @@ $(document).ready(function () {
       async: false,
       data:{
         itemID: itemID,
+        sequence: sequence,
         contentType: contentType,
         content: content,
         loginUser: getLoginUser()
@@ -152,9 +153,11 @@ $(document).ready(function () {
   function saveUploadFileList(fileType, fileList) {
     let result = {};
     let successFileList = [];
+    let currentSequence = getCurrentSequence(fileType);
     $.each(fileList, function (index, file) {
-      result = saveDetailInfo(_itemID, fileType, file);
+      result = saveDetailInfo(_itemID, fileType, file, currentSequence);
       if(result.success){
+        currentSequence++;
         successFileList.push({
           detailID: result.detailId,
           content: file
@@ -164,6 +167,26 @@ $(document).ready(function () {
       }
     });
     return successFileList;
+  }
+
+  function getCurrentSequence(fileType) {
+    let currentSequence = 0;
+    switch (fileType){
+      case 'T':
+        currentSequence = $('.content-text .detail .group-text').length + 1;
+        break;
+      case 'V':
+        currentSequence = $('.content-video .detail .content-hover').length + 1;
+        break;
+      case 'I':
+        currentSequence = $('.content-image .detail .content-hover').length + 1;
+        break;
+      case 'F':
+        currentSequence = $('.content-file .detail .group-file').length + 1;
+        break;
+    }
+
+    return currentSequence;
   }
 
   /**
@@ -177,9 +200,17 @@ $(document).ready(function () {
           '    <p style="margin-top: 10px">' + text.content + '</p>\n' +
           '  </div>\n' +
           '  <div class="text-option">\n' +
-          '    <a href="javascript:" class="del-text" data-detail-id="' + text.detailID + '">\n' +
+          '   <p>' +
+          '     <a href="javascript:" class="del-text" data-detail-id="' + text.detailID + '">\n' +
           '      <i class="icon-trash red"></i>\n' +
-          '    </a>\n' +
+          '     </a>\n' +
+          '     <a href="javascript:" class="change-position-up" data-detail-id="' + text.detailID + '">\n' +
+          '       <i class="icon-circle-arrow-up change-position"></i>\n' +
+          '     </a>\n' +
+          '     <a href="javascript:" class="change-position-down" data-detail-id="' + text.detailID + '">\n' +
+          '       <i class="icon-circle-arrow-down change-position"></i>\n' +
+          '     </a>\n' +
+          '   </p>' +
           '  </div>\n' +
           '</div>');
 
@@ -206,6 +237,35 @@ $(document).ready(function () {
           }
         });
       });
+
+      $('.content-text .detail .group-text[data-detail-id=' + text.detailID + ']').on('click','a.change-position-up', function() {
+        let detailId = $(this).attr('data-detail-id');
+        let currentFileObj = $(this).parent().parent().parent();
+        let previousFileObj = $(this).parent().parent().parent().prev();
+        if(previousFileObj.length === 0){
+          layer.msg('已经在最前面了。');
+          return false;
+        }
+        let previousId = $(previousFileObj).attr('data-detail-id');
+        $(previousFileObj).before($(currentFileObj));
+
+        reverseSequence(detailId, previousId);
+      });
+
+      $('.content-text .detail .group-text[data-detail-id=' + text.detailID + ']').on('click','a.change-position-down', function() {
+        let detailId = $(this).attr('data-detail-id');
+        let currentFileObj = $(this).parent().parent().parent();
+        let nextFileObj = $(this).parent().parent().parent().next();
+        if(nextFileObj.length === 0){
+          layer.msg('已经在最后面了。');
+          return false;
+        }
+
+        let nextId = $(nextFileObj).attr('data-detail-id');
+        $(nextFileObj).after($(currentFileObj));
+
+        reverseSequence(detailId, nextId);
+      });
     });
   }
 
@@ -221,7 +281,9 @@ $(document).ready(function () {
           '    <img src="' + file.content + '" alt="">\n' +
           '  </div>\n' +
           '  <div class="text-desc" data-detail-id="' + file.detailID + '">\n' +
-          '    <a href="javascript:" class="option del-image" data-detail-id="' + file.detailID + '">删除图片</a>\n' +
+          '    <a href="javascript:;" class="option del-image" data-detail-id="' + file.detailID + '">删除图片</a>\n' +
+          '    <a href="javascript:;" class="option change-position-up" data-detail-id="' + file.detailID + '">上移</a>\n' +
+          '    <a href="javascript:;" class="option change-position-down" data-detail-id="' + file.detailID + '">下移</a>\n' +
           '  </div>\n' +
           '  <div class="image-desc" data-detail-id="' + file.detailID + '">\n' +
           '    <p>' + file.content.substr(file.content.lastIndexOf('/')+1) + '</p>\n' +
@@ -251,6 +313,33 @@ $(document).ready(function () {
           }
         });
       });
+
+      $('.content-image .detail .text-desc[data-detail-id=' + file.detailID + ']').on('click','a.change-position-up', function() {
+        let detailId = $(this).attr('data-detail-id');
+        let currentFileObj = $(this).parent().parent();
+        let previousFileObj = $(this).parent().parent().prev();
+        if(previousFileObj.length === 0){
+          layer.msg('已经在最前面了。');
+          return false;
+        }
+        let previousId = $(previousFileObj).attr('data-detail-id');
+        $(previousFileObj).before($(currentFileObj));
+        reverseSequence(detailId, previousId);
+      });
+
+      $('.content-image .detail .text-desc[data-detail-id=' + file.detailID + ']').on('click','a.change-position-down', function() {
+        let detailId = $(this).attr('data-detail-id');
+        let currentFileObj = $(this).parent().parent();
+        let nextFileObj = $(this).parent().parent().next();
+        if(nextFileObj.length === 0){
+          layer.msg('已经在最后面了。');
+          return false;
+        }
+
+        let nextId = $(nextFileObj).attr('data-detail-id');
+        $(nextFileObj).after($(currentFileObj));
+        reverseSequence(detailId, nextId);
+      });
     });
   }
 
@@ -271,9 +360,17 @@ $(document).ready(function () {
           '    <p>' + file.content.substr(file.content.lastIndexOf('/')+1) + '</p>\n' +
           '  </div>\n' +
           '  <div class="video-option">\n' +
-          '    <a href="javascript:" class="del-video" data-detail-id="' + file.detailID + '">\n' +
-          '      <i class="icon-trash red"></i>\n' +
-          '    </a>\n' +
+          '   <p>' +
+          '     <a href="javascript:" class="del-video" data-detail-id="' + file.detailID + '">\n' +
+          '       <i class="icon-trash red"></i>\n' +
+          '     </a>\n' +
+          '     <a href="javascript:" class="change-position-up" data-detail-id="' + file.detailID + '">\n' +
+          '       <i class="icon-circle-arrow-up change-position"></i>\n' +
+          '     </a>\n' +
+          '     <a href="javascript:" class="change-position-down" data-detail-id="' + file.detailID + '">\n' +
+          '       <i class="icon-circle-arrow-down change-position"></i>\n' +
+          '     </a>\n' +
+          '   </p>' +
           '  </div>\n' +
           '</div>');
 
@@ -300,6 +397,37 @@ $(document).ready(function () {
           }
         });
       });
+
+      $('.content-video .detail .group-video[data-detail-id=' + file.detailID + ']').on('click','a.change-position-up', function() {
+        let detailId = $(this).attr('data-detail-id');
+        let currentFileObj = $(this).parent().parent().parent();
+        let previousFileObj = $(this).parent().parent().parent().prev();
+        if(previousFileObj.length === 0){
+          layer.msg('已经在最前面了。');
+          return false;
+        }
+        let previousId = $(previousFileObj).attr('data-detail-id');
+        $(previousFileObj).before($(currentFileObj));
+
+        reverseSequence(detailId, previousId);
+
+      });
+
+      $('.content-video .detail .group-video[data-detail-id=' + file.detailID + ']').on('click','a.change-position-down', function() {
+        let detailId = $(this).attr('data-detail-id');
+        let currentFileObj = $(this).parent().parent().parent();
+        let nextFileObj = $(this).parent().parent().parent().next();
+        if(nextFileObj.length === 0){
+          layer.msg('已经在最后面了。');
+          return false;
+        }
+
+        let nextId = $(nextFileObj).attr('data-detail-id');
+        $(nextFileObj).after($(currentFileObj));
+
+        reverseSequence(detailId, nextId);
+      });
+
     });
   }
 
@@ -312,8 +440,12 @@ $(document).ready(function () {
       $('.content-file .detail').append(
           '<div class="group-file" data-detail-id="' + file.detailID + '">\n' +
           '  <img src="/images/icons/pdf.png" alt="">\n' +
-          '  <a href="' + file.content + '" target="_blank">' + file.content.substr(file.content.lastIndexOf('/')+1) + '</a>\n' +
-          '  <i class="icon-trash del-file" data-detail-id="' + file.detailID + '"></i>' +
+          '  <a href="' + file.content + '" target="_blank"><span>' + file.content.substr(file.content.lastIndexOf('/')+1) + '</span></a>\n' +
+          '  <p>' +
+          '    <i class="icon-trash del-file" data-detail-id="' + file.detailID + '"></i>' +
+          '    <i class="icon-circle-arrow-up change-position" data-detail-id="' + file.detailID + '"></i>' +
+          '    <i class="icon-circle-arrow-down change-position" data-detail-id="' + file.detailID + '"></i>' +
+          '  </p>' +
           '</div>');
 
       //删除文件事件
@@ -339,6 +471,59 @@ $(document).ready(function () {
           }
         });
       });
+
+      //向上移动
+      $('.content-file .detail .group-file[data-detail-id='+ file.detailID + ']').on('click','i.icon-circle-arrow-up', function() {
+        let detailId = $(this).attr('data-detail-id');
+        let currentFileObj = $(this).parent().parent();
+        let previousFileObj = $(this).parent().parent().prev();
+        if(previousFileObj.length === 0){
+          layer.msg('已经在最前面了。');
+          return false;
+        }
+        let previousId = $(previousFileObj).attr('data-detail-id');
+        $(previousFileObj).before($(currentFileObj));
+
+        reverseSequence(detailId, previousId);
+      });
+
+      //向下移动
+      $('.content-file .detail .group-file[data-detail-id='+ file.detailID + ']').on('click','i.icon-circle-arrow-down', function() {
+        let detailId = $(this).attr('data-detail-id');
+        let currentFileObj = $(this).parent().parent();
+        let nextFileObj = $(this).parent().parent().next();
+        if(nextFileObj.length === 0){
+          layer.msg('已经在最后面了。');
+          return false;
+        }
+
+        let nextId = $(nextFileObj).attr('data-detail-id');
+        $(nextFileObj).after($(currentFileObj));
+
+        reverseSequence(detailId, nextId);
+      });
+
+    });
+  }
+
+  function reverseSequence(first_id, second_id){
+    $.ajax({
+      url: '/detail/reverseSequence',
+      type: 'put',
+      dataType: 'json',
+      data:{
+        firstDetailID: first_id,
+        secondDetailID: second_id,
+        loginUser: getLoginUser()
+      },
+      success: function(res){
+        if(res.err){
+          layer.msg(res.msg);
+        }
+      },
+      error: function(XMLHttpRequest, textStatus){
+        layer.msg('远程服务无响应，请检查网络设置。');
+      }
     });
   }
 
@@ -385,7 +570,8 @@ $(document).ready(function () {
       return false;
     }
     let textList = [];
-    let result = saveDetailInfo(_itemID, 'T', text);
+    let currentSequence = getCurrentSequence('T');
+    let result = saveDetailInfo(_itemID, 'T', text,currentSequence);
     if(!result.success){
       layer.msg('保存文字信息失败。');
       return false;
